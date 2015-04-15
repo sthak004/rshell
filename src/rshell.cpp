@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string>
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -31,12 +32,12 @@ void displayPrompt(){
 }
 
 
-/*void parseCommands(char &commands[]){
+void parseCommands(char &commands[]){
     vector<char*> single_commands; //vector that stores each command
     
     char_separator<char> delim(";");
-    tokenizer< char_separator<char> > mytok(commands, delim);
-}*/
+    tokenizer< char_separator<char> > mytok(commands[], delim);
+}
 
 
 /*void executeCommand(char **argv){
@@ -64,7 +65,6 @@ void displayPrompt(){
 int main(void){
         string cmd;
 
-        //char commandLine[1000]; //user's command
 
         while(cmd != "exit"){
             displayPrompt(); //display the username and hostname
