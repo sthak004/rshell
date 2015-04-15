@@ -14,10 +14,11 @@ int main(int argc, char** argv){
                 perror("getlogin");
                 exit(1);
         }        
+
         char hostname[100]; //create a char array for the hostname
         if((gethostname(hostname, sizeof(hostname))) == -1){
-        perror("hostname");
-        exit(1);
+                perror("hostname");
+                exit(1);
         }              
    
    
