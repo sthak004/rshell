@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,10 +31,12 @@ void displayPrompt(){
 }
 
 
-void parseCommand(string &cmd){
-    char_separator<char> delim;
-    tokenizer< char_separator<char> > mytok(cmd, delim);
-}
+/*void parseCommands(char &commands[]){
+    vector<char*> single_commands; //vector that stores each command
+    
+    char_separator<char> delim(";");
+    tokenizer< char_separator<char> > mytok(commands, delim);
+}*/
 
 
 /*void executeCommand(char **argv){
@@ -60,6 +63,8 @@ void parseCommand(string &cmd){
 
 int main(void){
         string cmd;
+
+        //char commandLine[1000]; //user's command
 
         while(cmd != "exit"){
             displayPrompt(); //display the username and hostname
