@@ -30,13 +30,13 @@ void displayPrompt(){
 }
 
 
-/*void parseCommand(string &cmd){
+void parseCommand(string &cmd){
     char_separator<char> delim;
     tokenizer< char_separator<char> > mytok(cmd, delim);
-}*/
+}
 
 
-void executeCommand(char **argv){
+/*void executeCommand(char **argv){
     int pid = fork();
 
     if(pid == -1){
@@ -55,7 +55,7 @@ void executeCommand(char **argv){
             perror("There was an error with wait()");
         }
     }
-}
+}*/
 
 
 int main(void){
