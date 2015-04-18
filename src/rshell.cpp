@@ -87,9 +87,10 @@ int main(){
 
         if(numArgs < 0){;} //if there are no arguments, simply skip.
 
-        cout << endl;
+        if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
+        
 
-        break;
+        //break;
     }
     return 0;
 }
