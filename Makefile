@@ -1,4 +1,4 @@
-FLAGS=-Wall -Werror -pedantic
+FLAGS=-Wall -Werror -ansi -pedantic
 STD=-std=c++11
 
 all:
