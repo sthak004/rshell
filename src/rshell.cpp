@@ -8,12 +8,8 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-#include <boost/tokenizer.hpp>
 
-using namespace boost;
 using namespace std;
-
-typedef tokenizer<char_separator<char> > mytok;
 
 void displayPrompt(){
     char *user = getlogin(); //I assign the login name to a user pointer
@@ -32,14 +28,75 @@ void displayPrompt(){
 
 }
 
+/*this parseCommands function will take a command line input and tokenize
+ * each command */ 
 
-void parseCommands(string &cmd){
-    vector<char*> single_commands;
+int parseCommands(char commandLine[]){
+    char delimeters[4]; //characters that we want to ignore when tokenizing
+    char *args; //the individual arguments
+    int numOfArgs; //the number of arguments
 
+    strcpy(delimeters, " .;:||&&"); //set the delimeters
 
+    args = strtok(commandLine, delimeters); //tokenize all the arguments in pointer of arguments called args
+    
+    numOfArgs = 1; //when we tokenize the first part, the count is 1
+
+    //this while loop condition signifies that we continue tokenizing until we have reached the end of our character array which is terminated by a null terminating character
+    while(args != '\0'){
+        args = strtok(NULL, delimeters); //gets the next argument
+        numOfArgs++; //increments the counter of arguments
+    }
+
+    return numOfArgs; //return the number of arguments
 }
 
 
+int main(void){
+    char commandLine[100000000]; //the user input command line (char array)
+    string commandLine_S; //the user input command line (string)
+
+    strcpy(commandLine, commandLine_S.c_str()); //this will take the string and put in in the char array
+
+    //parseCommands(commandLine);
+
+    while(1){
+        displayPrompt(); // display current user and hostname
+        getline(cin, commandLine_S); //get user input
+    }
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//notes to try
+//------------
+// if(strcmp(argv[0], "exit") == 0){
+//              exit(0);
+//         }
+//------------
+//execute command needs work
+//----------------------------------------
+/*string cmd; //command line to be inputted from user
+        while(cmd != "exit"){
+            displayPrompt(); //display the username and hostname
+            getline(cin, cmd);
+            //parseCommands(cmd);
+        }
+*/
+//----------------------------------------------------------------
 /*void executeCommand(char **argv){
     int pid = fork();
 
@@ -60,26 +117,3 @@ void parseCommands(string &cmd){
         }
     }
 }*/
-
-
-int main(void){
-        /*string cmd; //command line to be inputted from user
-
-
-        while(cmd != "exit"){
-            displayPrompt(); //display the username and hostname
-            getline(cin, cmd);
-            //parseCommands(cmd);
-        }*/
-
-
-        return 0;
-}
-
-//notes to try
-//------------
-// if(strcmp(argv[0], "exit") == 0){
-//              exit(0);
-//         }
-//------------
-//execute command needs work
