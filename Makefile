@@ -1,4 +1,4 @@
-FLAGS=-Wall -Werror -ansi -pedantic
+FLAGS=-Wall -Werror -pedantic
 STD=-std=c++11
 
 all:
@@ -8,3 +8,5 @@ all:
 rshell:
 	if [ ! -d bin ]; then mkdir bin; fi
 	g++ $(STD) $(FLAGS) src/rshell.cpp -o bin/rshell
+clean:
+	rm -rf bin
