@@ -29,7 +29,7 @@ void displayPrompt(){
 
 }
 
-void extractCommands(string &commandLine, char **cmds){
+int extractCommands(string &commandLine, char **cmds){
     const char* args = commandLine.c_str(); //the user input is converted to a const char* as we need it for execvp
     char* args_Mutatable = const_cast<char*>(args); //it needs to be mutable for us to tokenize it
     char *single_command;
@@ -47,26 +47,11 @@ void extractCommands(string &commandLine, char **cmds){
         numOfArgs++;
     }
 
+    return numOfArgs;
 }
 
 
-
-int main(){
-    string userInput; //command line in string format
-    char *cmds[256];
-    while(1){
-        displayPrompt(); //displays current user and hostname
-        getline(cin, userInput); //get's input from user and stores it in a string
-        cout << userInput << endl;
-        extractCommands(userInput, cmds);
-        cout << endl;
-        break;
-    }
-    return 0;
-}
-
-
-/*void executeCommand(char **args){
+void executeCommand(char **args){
     int pid = fork();
 
     if(pid == -1){
@@ -85,5 +70,27 @@ int main(){
             perror("There was an error with wait()");
         }
     }
-}*/
+}
+
+
+int main(){
+    string userInput; //command line in string format
+    char *cmds[10000];
+    while(1){
+        displayPrompt(); //displays current user and hostname
+
+        getline(cin, userInput); //get's input from user and stores it in a string
+
+        cout << userInput << endl; //NEED TO DELETE UPON COMPLETETION
+
+        int numArgs = extractCommands(userInput, cmds); //retrieve number of arguments by parsing the string
+
+        if(numArgs < 0){;} //if there are no arguments, simply skip.
+
+        cout << endl;
+
+        break;
+    }
+    return 0;
+}
 
