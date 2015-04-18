@@ -75,12 +75,6 @@ int main(void){
 
 
 
-
-
-
-
-
-
 //notes to try
 //------------
 // if(strcmp(argv[0], "exit") == 0){
@@ -88,14 +82,7 @@ int main(void){
 //         }
 //------------
 //execute command needs work
-//----------------------------------------
-/*string cmd; //command line to be inputted from user
-        while(cmd != "exit"){
-            displayPrompt(); //display the username and hostname
-            getline(cin, cmd);
-            //parseCommands(cmd);
-        }
-*/
+
 //----------------------------------------------------------------
 /*void executeCommand(char **argv){
     int pid = fork();
