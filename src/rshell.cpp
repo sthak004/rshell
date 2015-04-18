@@ -8,6 +8,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <limits>
 
 using namespace std;
 
@@ -28,63 +29,35 @@ void displayPrompt(){
 
 }
 
-/*this parseCommands function will take a command line input and tokenize
- * each command */ 
-
-int parseCommands(char commandLine[]){
-    char delimeters[4]; //characters that we want to ignore when tokenizing
-    char *args; //the individual arguments
-    int numOfArgs; //the number of arguments
-
-    strcpy(delimeters, " .;:||&&"); //set the delimeters
-
-    args = strtok(commandLine, delimeters); //tokenize all the arguments in pointer of arguments called args
-    
-    numOfArgs = 1; //when we tokenize the first part, the count is 1
-
-    //this while loop condition signifies that we continue tokenizing until we have reached the end of our character array which is terminated by a null terminating character
-    while(args != '\0'){
-        args = strtok(NULL, delimeters); //gets the next argument
-        numOfArgs++; //increments the counter of arguments
+void extractCommands(string &commandLine){
+    const char* args = commandLine.c_str();
+    char* args_Mutatable = const_cast<char*>(args);
+    char *single_command;
+    single_command = strtok(args_Mutatable, " ;&|");
+    while(single_command != NULL){
+        cout << single_command << endl;
+        single_command = strtok(NULL, " ;&|");
     }
 
-    return numOfArgs; //return the number of arguments
 }
 
 
-int main(void){
-    char commandLine[100000000]; //the user input command line (char array)
-    string commandLine_S; //the user input command line (string)
 
-    strcpy(commandLine, commandLine_S.c_str()); //this will take the string and put in in the char array
-
-    //parseCommands(commandLine);
+int main(){
+    string userInput; //command line in string format
 
     while(1){
-        displayPrompt(); // display current user and hostname
-        getline(cin, commandLine_S); //get user input
+        displayPrompt(); //displays current user and hostname
+        getline(cin, userInput); //get's input from user and stores it in a string
+        cout << userInput << endl;
+        extractCommands(userInput);
+        break;
     }
-
-
     return 0;
 }
 
 
-
-
-
-
-
-//notes to try
-//------------
-// if(strcmp(argv[0], "exit") == 0){
-//              exit(0);
-//         }
-//------------
-//execute command needs work
-
-//----------------------------------------------------------------
-/*void executeCommand(char **argv){
+/*void executeCommand(char **args){
     int pid = fork();
 
     if(pid == -1){
@@ -93,7 +66,7 @@ int main(void){
     }
     else if(pid == 0){
         cout << "We are in the child process!";
-        if(-1 == execvp(*argv, argv)){
+        if(-1 == execvp(args[0], args)){
             perror("There was an error with execvp");
             exit(1);
         }
@@ -104,3 +77,4 @@ int main(void){
         }
     }
 }*/
+
