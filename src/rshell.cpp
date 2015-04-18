@@ -29,14 +29,22 @@ void displayPrompt(){
 
 }
 
-void extractCommands(string &commandLine){
-    const char* args = commandLine.c_str();
-    char* args_Mutatable = const_cast<char*>(args);
+void extractCommands(string &commandLine, char **cmds){
+    const char* args = commandLine.c_str(); //the user input is converted to a const char* as we need it for execvp
+    char* args_Mutatable = const_cast<char*>(args); //it needs to be mutable for us to tokenize it
     char *single_command;
-    single_command = strtok(args_Mutatable, " ;&|");
+    single_command = strtok(args_Mutatable, " ;&|"); //execute strtok with delimeters
+    
+    int numOfArgs = 0; //when you add one --> argv[1]
+
+
     while(single_command != NULL){
-        cout << single_command << endl;
+        //cout << single_command << endl;
+        cmds[numOfArgs] = strdup(single_command); //this processes each command into the command array for execution
+        /*cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
+        cout << endl;*/
         single_command = strtok(NULL, " ;&|");
+        numOfArgs++;
     }
 
 }
@@ -45,12 +53,13 @@ void extractCommands(string &commandLine){
 
 int main(){
     string userInput; //command line in string format
-
+    char *cmds[256];
     while(1){
         displayPrompt(); //displays current user and hostname
         getline(cin, userInput); //get's input from user and stores it in a string
         cout << userInput << endl;
-        extractCommands(userInput);
+        extractCommands(userInput, cmds);
+        cout << endl;
         break;
     }
     return 0;
