@@ -13,6 +13,7 @@
 using namespace boost;
 using namespace std;
 
+typedef tokenizer<char_separator<char> > mytok;
 
 void displayPrompt(){
     char *user = getlogin(); //I assign the login name to a user pointer
@@ -32,11 +33,10 @@ void displayPrompt(){
 }
 
 
-void parseCommands(char &commands[]){
-    vector<char*> single_commands; //vector that stores each command
-    
-    char_separator<char> delim(";");
-    tokenizer< char_separator<char> > mytok(commands[], delim);
+void parseCommands(string &cmd){
+    vector<char*> single_commands;
+
+
 }
 
 
@@ -63,13 +63,14 @@ void parseCommands(char &commands[]){
 
 
 int main(void){
-        string cmd;
+        /*string cmd; //command line to be inputted from user
 
 
         while(cmd != "exit"){
             displayPrompt(); //display the username and hostname
             getline(cin, cmd);
-        }
+            //parseCommands(cmd);
+        }*/
 
 
         return 0;
