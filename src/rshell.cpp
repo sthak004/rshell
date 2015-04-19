@@ -53,7 +53,7 @@ int extractCommands(string &commandLine, char **cmds){
 }
 
 
-int executeCommand(char **args){
+int executeCommand(int pos, char **args){
     int pid = fork();
 
     if(pid == -1){
@@ -61,7 +61,7 @@ int executeCommand(char **args){
         exit(1);
     }
     else if(pid == 0){
-        if(-1 == execvp(/*args[0]*/ *args, args)){
+        if(-1 == execvp(/*args[0]*/ args[pos], args)){
             perror("There was an error with execvp");
             exit(1);
         }
@@ -75,29 +75,20 @@ int executeCommand(char **args){
     return 0; //if everything goes well, return 0 
 }
 
-void extractConnectors(string commandLine, char **cmds){
-    vector<string> connectors;
-    for(unsigned int i = 0; i < commandLine.size(); ++i){
-        if(commandLine.at(i)  == ';'){
-            connectors.push_back(";");   
+vector<string>  extractConnectors(string inputLine){
+    vector<string> cnctors;
+    for(unsigned int i = 0; i < inputLine.size(); ++i){
+        if(inputLine.at(i)  == ';'){
+            cnctors.push_back(";");   
         }
-        if((commandLine.at(i) == '&' && commandLine.at(i+1) == '&')){
-            connectors.push_back("&&");
+        if((inputLine.at(i) == '&' && inputLine.at(i+1) == '&')){
+            cnctors.push_back("&&");
         }
-        if((commandLine.at(i) == '|' && commandLine.at(i+1) == '|')){
-            connectors.push_back("||");
-        }
-    }
-
-    for(unsigned int i = 0; i < connectors.size(); ++i){
-        if(connectors.at(i) == ";"){
-            if(executeCommand(cmds) != 0){
-                cout << "Error in parsing arguments" << endl;
-            }
+        if((inputLine.at(i) == '|' && inputLine.at(i+1) == '|')){
+            cnctors.push_back("||");
         }
     }
-   
-    
+    return cnctors;
 }
 
 
@@ -109,6 +100,15 @@ int main(){
         displayPrompt(); //displays current user and hostname
 
         getline(cin, userInput); //get's input from user and stores it in a string
+ 
+        /*gets all the delimeters and stores into a vector*/
+        vector<string> connectors = extractConnectors(userInput);
+        cout << "CONNECTORS: ";
+        for(unsigned i = 0; i < connectors.size(); ++i){
+            cout << connectors.at(i) << ' ';
+        }
+        cout << endl;
+
 
         //cout << userInput << endl; //NEED TO DELETE UPON COMPLETETION
 
@@ -121,11 +121,10 @@ int main(){
         /*checks if first argument is exit and quits iff it's the only argument*/
         if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
 
-        //extractConnectors(userInput, cmds);
         
-        if(executeCommand(cmds) != 0){
+        /*if(executeCommand(cmds) != 0){
             cout << "Error in executing commands" << endl;
-        }
+        }*/
 
     }while(1);
       
