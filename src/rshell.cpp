@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <limits>
+#include <algorithm>
 
 using namespace std;
 
@@ -31,9 +32,9 @@ void displayPrompt(){
 
 
 
-void splitSpaces(char* argument, char **pendingArgs, int pos){
+/*void splitSpaces(char* argument, char **pendingArgs, int pos){
     string temp(argument);
-    //int count = 1; //used for debugging
+    int count = 1; //used for debugging
     for(unsigned int i = 0; i < temp.size(); ++i){
         if(temp.at(i) == ' '){
             int j = i;
@@ -41,17 +42,50 @@ void splitSpaces(char* argument, char **pendingArgs, int pos){
                 j++;
             }
             string part1 = temp.substr(0, i);
-            //cout << "PART" << count << ": "  << part1 << endl;
+            cout << "PART" << count << ": "  << part1 << endl;
             pendingArgs[pos] = const_cast<char*>(part1.c_str());
             string part2 = temp.substr(j, temp.size());
-            //cout << "PART" << count++ << ": " << part2  << endl;
+            pos = pos + 1;
+            count = count + 1;
+            cout << "PART" << count << ": " << part2  << endl;
             pendingArgs[pos] = const_cast<char*>(part2.c_str());
+            return;
         }
     }
+}*/
+
+
+void splitSpaces(char* argument, char **pendingArgs, int pos){
+    string temp(argument);
+    string first_word, second_word;
+
+    for(unsigned int i = 0; i < temp.size(); ++i){
+        if( !(isspace(temp.at(i))) && (second_word.size() == 0) ){
+            first_word += temp.at(i);
+        }
+        else if( (isspace(temp.at(i)))){
+            if( !(isspace(temp.at(i+1))) ){
+                second_word += temp.at(i+1);
+                ++i;   
+            }
+        }
+        else if( !(isspace(temp.at(i))) ){
+            second_word += temp.at(i);
+        }
+    }
+
+    cout << "THE FIRST PIECE: " << first_word << endl;
+    pendingArgs[pos] = const_cast<char*>(first_word.c_str());
+    
+    pos++;
+    
+    cout << "THE SECOND PIECE: " << second_word << endl;
+    pendingArgs[pos] = const_cast<char*>(second_word.c_str());
+
+    pos++;
+    pendingArgs[pos] = NULL; //YOUR ARGUMENT ARRAY MUST END IN A NULL PTR
+    return;
 }
-
-
-
 
 
 
@@ -118,20 +152,48 @@ vector<string>  extractConnectors(string inputLine){
     return cnctors;
 }
 
+bool noSpace(char* single){
+    string temp(single);
+    for(unsigned int i = 0; i < temp.size(); ++i){
+        if(temp.at(i) == ' '){
+            return false;   
+        }
+    }
 
+    return true;
+}
 
 void run(vector<string> &connectors, char **cmds){
     char *pendingArgs[10000]; //arguments waiting to be executed depending on connector 
-    /*for(unsigned int i = 0; i < connectors.size(); ++i){
-        if(connectors.at(i) == ";" && hasSpace(cmds[i])){
-            cout << "BEFORE: " << cmds[i] << endl;
+    if(connectors.size() == 0){
+        if(noSpace(cmds[0])){
+           pendingArgs[0] = cmds[0];
+           pendingArgs[1] = NULL;
+           executeCommand(pendingArgs);
+           return;
+        }
+        cout << "PASSES FIRST TEST" << endl;
+        splitSpaces(cmds[0], pendingArgs, 0);
+        cout << "FIRST ARGUMENT with no multiples: " << pendingArgs[0];
+        cout << endl;
+        executeCommand(pendingArgs);
+        return;
+    }
+    for(unsigned int i = 0; i < connectors.size(); ++i){
+        if(connectors.at(i) == ";"){
+            /*cout << "BEFORE: " << cmds[i] << endl;
             pendingArgs[i] = cmds[i];
             cout << "AFTER: " << pendingArgs[i] << endl;
+            executeCommand(pendingArgs);*/
+            cout << "REACHED3" << endl;
+            splitSpaces(cmds[i], pendingArgs, i);
+            cout << "REACHED4" << endl;
+            cout << "First arg: " << pendingArgs[0]; 
+            cout << "READED5" << endl;
+            cout << "Second arg: " << pendingArgs[1];
             executeCommand(pendingArgs);
         }
-    }*/
-    int i = 0;
-    splitSpaces(cmds[0], pendingArgs, i);
+    }
 }
 
 
@@ -162,17 +224,15 @@ int main(){
 
         /*checks if first argument is exit and quits iff it's the only argument*/
         if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
-
         
-        //run(connectors, cmds);
+        run(connectors, cmds);
 
-        if(executeCommand(cmds) != 0){
+        /*if(executeCommand(cmds) != 0){
             cout << "Error in executing commands" << endl;
-        }
+        }*/
 
     }while(1);
       
 
     return 0;
 }
-
