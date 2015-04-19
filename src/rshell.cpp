@@ -77,12 +77,12 @@ int executeCommand(char **args){
 int main(){
     string userInput; //command line in string format
     char *cmds[10000];
-    while(1){
+    do{ 
         displayPrompt(); //displays current user and hostname
 
         getline(cin, userInput); //get's input from user and stores it in a string
 
-        cout << userInput << endl; //NEED TO DELETE UPON COMPLETETION
+        //cout << userInput << endl; //NEED TO DELETE UPON COMPLETETION
 
         int numArgs = extractCommands(userInput, cmds); //retrieve number of arguments by parsing the string
 
@@ -96,8 +96,10 @@ int main(){
             }
         }
 
+        
         //break;
-    }
+    }while(1);
+
     return 0;
 }
 
