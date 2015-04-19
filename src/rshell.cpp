@@ -51,7 +51,7 @@ int extractCommands(string &commandLine, char **cmds){
 }
 
 
-void executeCommand(char **args){
+int executeCommand(char **args){
     int pid = fork();
 
     if(pid == -1){
@@ -59,7 +59,6 @@ void executeCommand(char **args){
         exit(1);
     }
     else if(pid == 0){
-        cout << "We are in the child process!";
         if(-1 == execvp(args[0], args)){
             perror("There was an error with execvp");
             exit(1);
@@ -70,6 +69,8 @@ void executeCommand(char **args){
             perror("There was an error with wait()");
         }
     }
+
+    return 0; //if everything goes well, return 0 
 }
 
 
@@ -85,10 +86,15 @@ int main(){
 
         int numArgs = extractCommands(userInput, cmds); //retrieve number of arguments by parsing the string
 
-        if(numArgs < 0){;} //if there are no arguments, simply skip.
+        if(numArgs <= 0){continue;} //if there are no arguments, simply continue
 
+        /*checks if first argument is exit and quits iff it's the only argument*/
         if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
-        
+        else{
+            if(executeCommand(cmds) != 0){
+                cout << "Error in executing commands" << endl;
+            }
+        }
 
         //break;
     }
