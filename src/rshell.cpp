@@ -47,6 +47,7 @@ int extractCommands(string &commandLine, char **cmds){
         numOfArgs++;
     }
 
+    cmds[numOfArgs] = NULL;
     return numOfArgs;
 }
 
@@ -84,21 +85,21 @@ int main(){
 
         //cout << userInput << endl; //NEED TO DELETE UPON COMPLETETION
 
+
         int numArgs = extractCommands(userInput, cmds); //retrieve number of arguments by parsing the string
 
-        if(numArgs <= 0){continue;} //if there are no arguments, simply continue
+
+        if(numArgs <= 0){continue;} //if there are no arguments, simply continue to the next iteration
 
         /*checks if first argument is exit and quits iff it's the only argument*/
         if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
-        else{
-            if(executeCommand(cmds) != 0){
-                cout << "Error in executing commands" << endl;
-            }
+        
+        if(executeCommand(cmds) != 0){
+            cout << "Error in executing commands" << endl;
         }
 
-        
-        //break;
     }while(1);
+      
 
     return 0;
 }
