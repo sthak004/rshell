@@ -31,31 +31,7 @@ void displayPrompt(){
 }
 
 
-
 /*void splitSpaces(char* argument, char **pendingArgs, int pos){
-    string temp(argument);
-    int count = 1; //used for debugging
-    for(unsigned int i = 0; i < temp.size(); ++i){
-        if(temp.at(i) == ' '){
-            int j = i;
-            while(temp.at(j) == ' '){
-                j++;
-            }
-            string part1 = temp.substr(0, i);
-            cout << "PART" << count << ": "  << part1 << endl;
-            pendingArgs[pos] = const_cast<char*>(part1.c_str());
-            string part2 = temp.substr(j, temp.size());
-            pos = pos + 1;
-            count = count + 1;
-            cout << "PART" << count << ": " << part2  << endl;
-            pendingArgs[pos] = const_cast<char*>(part2.c_str());
-            return;
-        }
-    }
-}*/
-
-
-void splitSpaces(char* argument, char **pendingArgs, int pos){
     string temp(argument);
     string first_word, second_word;
 
@@ -85,26 +61,49 @@ void splitSpaces(char* argument, char **pendingArgs, int pos){
     pos++;
     pendingArgs[pos] = NULL; //YOUR ARGUMENT ARRAY MUST END IN A NULL PTR
     return;
+}*/
+
+
+
+
+void splitSpaces(char* argument, char **pendingArgs, int pos){
+    char *token = strtok(argument, " ");
+    while(token != NULL){
+        cout << token << endl;
+        token = strtok(NULL, " ");
+
+        pendingArgs[pos] = token;
+        pos++;
+
+    }
+
+    pendingArgs[pos] = NULL;
+    cout << "position: " << pos << endl;
+    cout << "arguments: " << pendingArgs[0] << ' ' << pendingArgs[1] << ' ' << pendingArgs[2];
+    return;
 }
 
 
 
-int executeCommand(char **args){
-    int pid = fork();
+
+
+int executeCommand(char **pendingArgs){
+    int  pid = fork();
 
     if(pid == -1){
         perror("There was some error with fork()");
         exit(1);
     }
     else if(pid == 0){
-        if(-1 == execvp(args[0], args)){
+        if(-1 == execvp(pendingArgs[0], pendingArgs)){
             perror("There was an error with execvp");
             exit(1);
         }
     }
     else if(pid > 0){
-        if(-1 == wait(0)){
-            perror("There was an error with wait()");
+        if(wait(0) == -1){
+            perror("There was some error with wait");
+            exit(1);
         }
     }
 
@@ -172,19 +171,19 @@ void run(vector<string> &connectors, char **cmds){
            executeCommand(pendingArgs);
            return;
         }
-        cout << "PASSES FIRST TEST" << endl;
-        splitSpaces(cmds[0], pendingArgs, 0);
-        cout << "FIRST ARGUMENT with no multiples: " << pendingArgs[0];
-        cout << endl;
-        executeCommand(pendingArgs);
-        return;
+        else if(connectors.size() == 0 && sizeof(cmds[0]) >= 2){
+            cout << "PASSES FIRST TEST" << endl;
+            splitSpaces(cmds[0], pendingArgs, 0);
+            executeCommand(pendingArgs);
+            return;
+        }
     }
-    for(unsigned int i = 0; i < connectors.size(); ++i){
+    /*for(unsigned int i = 0; i < connectors.size(); ++i){
         if(connectors.at(i) == ";"){
-            /*cout << "BEFORE: " << cmds[i] << endl;
+            cout << "BEFORE: " << cmds[i] << endl;
             pendingArgs[i] = cmds[i];
             cout << "AFTER: " << pendingArgs[i] << endl;
-            executeCommand(pendingArgs);*/
+            executeCommand(pendingArgs);
             cout << "REACHED3" << endl;
             splitSpaces(cmds[i], pendingArgs, i);
             cout << "REACHED4" << endl;
@@ -193,7 +192,7 @@ void run(vector<string> &connectors, char **cmds){
             cout << "Second arg: " << pendingArgs[1];
             executeCommand(pendingArgs);
         }
-    }
+    }*/
 }
 
 
