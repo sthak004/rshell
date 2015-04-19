@@ -29,6 +29,7 @@ void displayPrompt(){
 
 }
 
+
 int extractCommands(string &commandLine, char **cmds){
     const char* args = commandLine.c_str(); //the user input is converted to a const char* as we need it for execvp
     char* args_Mutatable = const_cast<char*>(args); //it needs to be mutable for us to tokenize it
@@ -41,8 +42,8 @@ int extractCommands(string &commandLine, char **cmds){
     while(single_command != NULL){
         //cout << single_command << endl;
         cmds[numOfArgs] = strdup(single_command); //this processes each command into the command array for execution
-        /*cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
-        cout << endl;*/
+        cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
+        cout << endl;
         single_command = strtok(NULL, " ;&|");
         numOfArgs++;
     }
@@ -60,7 +61,7 @@ int executeCommand(char **args){
         exit(1);
     }
     else if(pid == 0){
-        if(-1 == execvp(args[0], args)){
+        if(-1 == execvp(/*args[0]*/ *args, args)){
             perror("There was an error with execvp");
             exit(1);
         }
@@ -73,6 +74,32 @@ int executeCommand(char **args){
 
     return 0; //if everything goes well, return 0 
 }
+
+void extractConnectors(string commandLine, char **cmds){
+    vector<string> connectors;
+    for(unsigned int i = 0; i < commandLine.size(); ++i){
+        if(commandLine.at(i)  == ';'){
+            connectors.push_back(";");   
+        }
+        if((commandLine.at(i) == '&' && commandLine.at(i+1) == '&')){
+            connectors.push_back("&&");
+        }
+        if((commandLine.at(i) == '|' && commandLine.at(i+1) == '|')){
+            connectors.push_back("||");
+        }
+    }
+
+    for(unsigned int i = 0; i < connectors.size(); ++i){
+        if(connectors.at(i) == ";"){
+            if(executeCommand(cmds) != 0){
+                cout << "Error in parsing arguments" << endl;
+            }
+        }
+    }
+   
+    
+}
+
 
 
 int main(){
@@ -93,6 +120,8 @@ int main(){
 
         /*checks if first argument is exit and quits iff it's the only argument*/
         if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
+
+        //extractConnectors(userInput, cmds);
         
         if(executeCommand(cmds) != 0){
             cout << "Error in executing commands" << endl;
