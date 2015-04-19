@@ -29,6 +29,29 @@ void displayPrompt(){
 
 }
 
+int executeCommand(char **args){
+    int pid = fork();
+
+    if(pid == -1){
+        perror("There was some error with fork()");
+        exit(1);
+    }
+    else if(pid == 0){
+        if(-1 == execvp(args[0], args)){
+            perror("There was an error with execvp");
+            exit(1);
+        }
+    }
+    else if(pid > 0){
+        if(-1 == wait(0)){
+            perror("There was an error with wait()");
+        }
+    }
+
+    return 0; //if everything goes well, return 0 
+}
+
+
 
 int extractCommands(string &commandLine, char **cmds){
     const char* args = commandLine.c_str(); //the user input is converted to a const char* as we need it for execvp
@@ -53,28 +76,6 @@ int extractCommands(string &commandLine, char **cmds){
 }
 
 
-int executeCommand(int pos, char **args){
-    int pid = fork();
-
-    if(pid == -1){
-        perror("There was some error with fork()");
-        exit(1);
-    }
-    else if(pid == 0){
-        if(-1 == execvp(/*args[0]*/ args[pos], args)){
-            perror("There was an error with execvp");
-            exit(1);
-        }
-    }
-    else if(pid > 0){
-        if(-1 == wait(0)){
-            perror("There was an error with wait()");
-        }
-    }
-
-    return 0; //if everything goes well, return 0 
-}
-
 vector<string>  extractConnectors(string inputLine){
     vector<string> cnctors;
     for(unsigned int i = 0; i < inputLine.size(); ++i){
@@ -91,6 +92,15 @@ vector<string>  extractConnectors(string inputLine){
     return cnctors;
 }
 
+void run(vector<string> &connectors, char **cmds){
+    for(unsigned int i = 0; i < connectors.size(); ++i){
+        if(connectors.at(i) == ";"){
+            if(executeCommand(cmds) != 0){
+                cout << "ERROR: couldn't execute command properly" << endl;   
+            }
+        }
+    }
+}
 
 
 int main(){
@@ -122,6 +132,7 @@ int main(){
         if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
 
         
+        run(connectors, cmds);
         /*if(executeCommand(cmds) != 0){
             cout << "Error in executing commands" << endl;
         }*/
