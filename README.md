@@ -10,5 +10,7 @@ Rshell emulates all behaviors a normal bash shell would do
 
 #Bug and Limitations
 *only single commands currently work, as in `ls-a` or `cat <filename>`.
+
 *no logic operator capability yet
+
 *`cd` not supported
