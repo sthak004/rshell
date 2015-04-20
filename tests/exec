@@ -1,0 +1,155 @@
+Script started on Sun 19 Apr 2015 10:53:18 PM PDT
+~
+sthak004@hammer $ ls
+[0m[01;32ma.out[0m*                 [01;32mhelloworld.asm~[0m*      [01;34mPictures[0m/
+assn1.asm~             [01;32mlab1.asm~[0m*            [01;34mpractice[0m/
+assn2.asm~             lab2_ex1.asm~         [01;34mPublic[0m/
+assn4_pseudo.asm       [01;32mlab2_ex2.asm~[0m*        [01;34mrshell[0m/
+assn6_backup.asm       lab2_ex3.asm~         sample.asm
+BACKUP_ASSN4           lab2_ex4.asm~         [01;34mTemplates[0m/
+BACKUP_ASSN4.asm       lab2_ex5.asm~         test.cpp
+[01;32mbackup_lab6_ex3[0m*       [01;32mlab2_ex5.asm~~[0m*       TEST_DELETE_ME
+[01;34mcs100LABS[0m/             [01;31mlab3.tgz[0m              TEST_DELETE_ME~
+[01;34mDesktop[0m/               lab5_ex1.asm          TEST_DELETE_ME.asm
+document1.asm          lab6_ex1_backup.asm   TEST_DELETE_ME.asm~
+[01;34mDocuments[0m/             [01;32mlab6_ex2_backup.asm[0m*  test_delete_this.asm
+[01;34mDownloads[0m/             [01;32mlab6_ex3_backup.asm[0m*  the_test.asm
+[01;35mFirefox_wallpaper.png[0m  [01;32mlab6.tgz[0m*             [01;34mucr-cs100[0m/
+[01;34mfirstrepo[0m/             [01;31mlab7.tgz[0m              [01;34mVideos[0m/
+[01;32mhelloworld.asm[0m*        [01;34mMusic[0m/
+[m~
+sthak004@hammer $ cd rshell/
+~/rshell
+sthak004@hammer $ ls
+[0m[01;34mbin[0m/  LICENSE  Makefile  README.md  [01;34msrc[0m/  [01;34mtests[0m/
+[m~/rshell
+sthak004@hammer $ cd[K[Kbin/rshell
+sthak004@hammer.cs.ucr.edu$ ls #begin wil th a simple ls
+bin  LICENSE  Makefile	README.md  src	tests
+sthak004@hammer.cs.ucr.edu$ ls -a ##  parameters worth  k with ls as well
+.   bin   LICENSE   .nfs000000000076652e000002d2  src
+..  .git  Makefile  README.md			  tests
+sthak004@hammer.cs.ucr.edu$ pwd  
+/class/classes/sthak004/rshell
+sthak004@hammer.cs.ucr.edu$ cat README.md
+#Rshell - a bash terminal emulator
+Rshell emulates all behaviors a normal bash shell would do
+
+##Installation
+` ``$ git clone https://github.com/sthak004/rshell.git`` `
+` ``$ cd rshell `` `
+` ``$ git checkout hw0`` `
+` ``$ make`` `
+` ``$ bin/rshell`` `
+
+#Bugs and Limitations
+*only single commands currently work, as in `ls-a` or `cat <filename>`.
+
+*no logic operator capability yet
+
+*`cd` not supported
+sthak004@hammer.cs.ucr.edu$ ls -aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+.   bin   LICENSE   .nfs000000000076652e000002d2  src
+..  .git  Makefile  README.md			  tests
+sthak004@hammer.cs.ucr.edu$ ls   s				
+bin  LICENSE  Makefile	README.md  src	tests
+sthak004@hammer.cs.ucr.edu$ ls    					ls
+bin  LICENSE  Makefile	README.md  src	tests
+sthak004@hammer.cs.ucr.edu$ ls    echo "This      Echos with quotation marks"
+"Echos with quotation marks"
+sthak004@hammer.cs.ucr.edu$ echo
+
+sthak004@hammer.cs.ucr.edu$ mkdir    l  ls
+bin  LICENSE  Makefile	README.md  src	tests
+sthak004@hammer.cs.ucr.edu$ mkdir sample $ ## I can make            direction   oar  rys can        ies can be made
+sthak004@hammer.cs.ucr.edu$ ls
+bin  LICENSE  Makefile	README.md  sample  src	tests
+sthak004@hammer.cs.ucr.edu$ cd sample  / #s cd does not work however
+There was an error with execvp: No such file or directory
+sthak004@hammer.cs.ucr.edu$ ls && pwd #logical operators do NOT work on my rshell
+sthak004@hammer.cs.ucr.edu$ ls || pwd
+sthak004@hammer.cs.ucr.edu$ ls    pwd &&cat      cat README.md || p ls -l  ; echo "test"
+sthak004@hammer.cs.ucr.edu$ #none   of which work   as you can see^
+sthak004@hammer.cs.ucr.edu$ ;;;;;;;;;;
+sthak004@hammer.cs.ucr.edu$ vimvb  
+[?1049h[?1h=[1;37r[?12;25h[?12l[?25h[27m[m[H[2J[>c[?25l[1;1H[33m  1 [m
+[1m[34m~                                                                             [3;1H~                                                                             [4;1H~                                                                             [5;1H~                                                                             [6;1H~                                                                             [7;1H~                                                                             [8;1H~                                                                             [9;1H~                                                                             [10;1H~                                                                             [11;1H~                                                                             [12;1H~                                                                             [13;1H~                                                                             [14;1H~                                                                             [15;1H~                                                                             [16;1H~                                                                             [17;1H~                                                                             [18;1H~                                                                             [19;1H~                                                                             [20;1H~                                                                             [21;1H~                                                                             [22;1H~                                                                             [23;1H~                                                                             [24;1H~                                                                             [25;1H~                                                                             [26;1H~                                                                             [27;1H~                                                                             [28;1H~                                                                             [29;1H~                                                                             [30;1H~                                                                             [31;1H~                                                                             [32;1H~                                                                             [33;1H~                                                                             [34;1H~                                                                             [35;1H~                                                                             [36;1H~                                                                             [m[37;61H0,0-1[9CAll[13;31HVIM - Vi IMproved[15;32Hversion 7.2.411[16;28Hby Bram Moolenaar et al.[17;23HModified by [34m<bugzilla@redhat.com>[m[18;18HVim is open source and freely distributable[20;25HHelp poor children in Uganda![21;17Htype  :help iccf[34m<Enter>[m       for information [23;17Htype  :q[34m<Enter>[m               to exit         [24;17Htype  :help[34m<Enter>[m  or  [34m<F1>[m  for on-line help[25;17Htype  :help version7[34m<Enter>[m   for version info[1;5H[?12l[?25hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[37;61H[K[37;1H:[13;31H[1m[34m                 [15;32H               [16;28H                        [17;23H                                  [18;18H                                           [20;25H                             [21;17H                                              [23;17H                                              [24;17H                                              [25;17H                                              [m
+
+
+[7m[No Name]                                                   0,0-1          All[m[29;1H[1m[34m:[m[33m 21 noh[m[29;9H[K[30;1H[1m[34m:[m[33m 22 [mdnh[30;9H[K[31;1H[1m[34m:[m[33m 23 [mdoh[31;9H[K[32;1H[1m[34m:[m[33m 24 q[m[32;7H[K[33;1H[1m[34m:[m[33m 25 w[m[33;7H[K[34;1H[1m[34m:[m[33m 26 wq[m[34;8H[K[35;1H[1m[34m:[m[33m 27 [m[35;6H[K[36;1H[1m[7m[Command Line]                                              27,0-1         Bot[35;6H[?12l[?25h[?25l[m
+
+[1mrecording[35;6H[?12l[?25h[?25l[m[37;1H[K[37;1H:[?12l[?25hq[?25l[?12l[?25h[?25l[37;1H[K[28;1H[1m[34m~                                                                             [29;1H~                                                                             [30;1H~                                                                             [31;1H~                                                                             [32;1H~                                                                             [33;1H~                                                                             [34;1H~                                                                             [35;1H~                                                                             [36;1H~                                                                             [m[37;1H[1mrecording[m[51C0,0-1[9CAll[1;5H[?12l[?25h[?25l[37;1H[K[37;1H:[?12l[?25hq[?25l[?12l[?25h[?25l[37;1H[K[37;1H[?1l>[?12l[?25h[?1049lsthak004@hammer.cs.ucr.edu$ ls
+bin  LICENSE  Makefile	README.md  sample  src	tests
+sthak004@hammer.cs.ucr.edu$ vim sample  .cpp
+[?1049h[?1h=[1;37r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[37;1H"sample.cpp" [New File][>c[1;1H[33m  1 [m
+[1m[34m~                                                                             [3;1H~                                                                             [4;1H~                                                                             [5;1H~                                                                             [6;1H~                                                                             [7;1H~                                                                             [8;1H~                                                                             [9;1H~                                                                             [10;1H~                                                                             [11;1H~                                                                             [12;1H~                                                                             [13;1H~                                                                             [14;1H~                                                                             [15;1H~                                                                             [16;1H~                                                                             [17;1H~                                                                             [18;1H~                                                                             [19;1H~                                                                             [20;1H~                                                                             [21;1H~                                                                             [22;1H~                                                                             [23;1H~                                                                             [24;1H~                                                                             [25;1H~                                                                             [26;1H~                                                                             [27;1H~                                                                             [28;1H~                                                                             [29;1H~                                                                             [30;1H~                                                                             [31;1H~                                                                             [32;1H~                                                                             [33;1H~                                                                             [34;1H~                                                                             [35;1H~                                                                             [36;1H~                                                                             [m[37;61H0,0-1[9CAll[1;5H[?12l[?25hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[37;1H[K[37;1H:[?12l[?25h[?25l[37;1H[K[37;61H0,0-1[9CAll[1;5H[?12l[?25h[?25l[37;1H[1m-- INSERT --[m[37;61H[K[37;61H0,1[11CAll[1;5H[?12l[?25h[?25l[33m [m#[37;61H1,2[1;6H[?12l[?25h[?25l#i[37;63H3[1;7H[?12l[?25h[?25lin[37;63H4[1;8H[?12l[?25h[?25lnc[37;63H5[1;9H[?12l[?25h[?25lcl[37;63H6[1;10H[?12l[?25h[?25llu[37;63H7[1;11H[?12l[?25h[?25lud[37;63H8[1;12H[?12l[?25h[?25lde[37;63H9[1;13H[?12l[?25h[?25l[37;63H10[1;14H[?12l[?25h[?25l[1;5H[35m#include <[m[37;64H1[1;15H[?12l[?25h[?25l[35m<[mi[37;64H2[1;16H[?12l[?25h[?25lio[37;64H3[1;17H[?12l[?25h[?25los[37;64H4[1;18H[?12l[?25h[?25lst[37;64H5[1;19H[?12l[?25h[?25ltr[37;64H6[1;20H[?12l[?25h[?25lre[37;64H7[1;21H[?12l[?25h[?25lea[37;64H8[1;22H[?12l[?25h[?25laM[37;64H9[1;23H[?12l[?25h[?25l
+[33m  2 [m[2;5H[K[37;61H2,1 [2;5H[?12l[?25h[?25l[1m[34m~                                                                             [m[37;61H1,19[1;23H[?12l[?25h[?25l[1;22H[K[37;64H8[1;22H[?12l[?25h[?25la<[37;64H9[1;23H[?12l[?25h[?25l
+[33m  2 [m[2;5H[K[37;61H2,1 [2;5H[?12l[?25h[?25l[1m[34m~                                                                             [m[37;61H1,19[1;23H[?12l[?25h[?25l[1;22H[K[37;64H8[1;22H[?12l[?25h[?25lam[37;64H9[1;23H[?12l[?25h[?25l[1;14H[31m<iostream>[m[37;63H20[1;24H[?12l[?25h[?25l
+[33m  2 [m[2;5H[K[37;61H2,1 [2;5H[?12l[?25h[?25l[33m [mu[37;63H2[2;6H[?12l[?25h[?25lus[37;63H3[2;7H[?12l[?25h[?25lsi[37;63H4[2;8H[?12l[?25h[?25lin[37;63H5[2;9H[?12l[?25h[?25l[33musing[m[37;63H6[2;10H[?12l[?25h[?25l[37;63H7[2;11H[?12l[?25h[?25l n[37;63H8[2;12H[?12l[?25h[?25lna[37;63H9[2;13H[?12l[?25h[?25lam[37;63H10[2;14H[?12l[?25h[?25lme[37;64H1[2;15H[?12l[?25h[?25les[37;64H2[2;16H[?12l[?25h[?25lsp[37;64H3[2;17H[?12l[?25h[?25lpc[37;64H4[2;18H[?12l[?25h[?25lce[37;64H5[2;19H[?12l[?25h[?25l[2;18H[K[37;64H4[2;18H[?12l[?25h[?25l[2;17H[K[37;64H3[2;17H[?12l[?25h[?25lpa[37;64H4[2;18H[?12l[?25h[?25lac[37;64H5[2;19H[?12l[?25h[?25l[2;11H[32mnamespace[m[37;64H6[2;20H[?12l[?25h[?25l[37;64H7[2;21H[?12l[?25h[?25l s[37;64H8[2;22H[?12l[?25h[?25lst[37;64H9[2;23H[?12l[?25h[?25ltd[37;63H20[2;24H[?12l[?25h[?25ld;[37;64H1[2;25H[?12l[?25h[?25l
+[33m  3 [m[3;5H[K[37;61H3,1 [3;5H[?12l[?25h[?25l
+[33m  4 [m[4;5H[K[37;61H4[4;5H[?12l[?25h[?25l[33m [mi[37;63H2[4;6H[?12l[?25h[?25lin[37;63H3[4;7H[?12l[?25h[?25l[32mint[m[37;63H4[4;8H[?12l[?25h[?25l[37;63H5[4;9H[?12l[?25h[?25l m[37;63H6[4;10H[?12l[?25h[?25lma[37;63H7[4;11H[?12l[?25h[?25lai[37;63H8[4;12H[?12l[?25h[?25lin[37;63H9[4;13H[?12l[?25h[?25ln([37;63H10[4;14H[?12l[?25h[?25l()[46m()[m[37;64H1[4;15H[?12l[?25h[?25l[46m)[m{()[37;64H2[4;16H[?12l[?25h[?25l
+[33m  5 [m    [5;9H[K[37;61H5,5 [5;9H[?12l[?25h[?25l
+[33m  6 [m    [6;9H[K[37;61H6[6;9H[?12l[?25h[?25l
+[33m  7 [m    [7;9H[K[37;61H7[7;9H[?12l[?25h[?25l[7;4H[33m [m}[4;15H[46m{[7;5H}[m[37;63H2[7;6H[?12l[?25h[?25l[4;15H{[7;5H}[37;61H6,1[6;5H[?12l[?25h[?25l[33m [m}
+[1m[34m~                                                                             [m[37;61H5[5;5H[?12l[?25h[?25l[33m [m}
+[1m[34m~                                                                             [m[4;15H[46m{[5;5H}[m[37;61H4,12[4;16H[?12l[?25h[?25l[4;15H[K[4;13H[46m()[m[5;5H}[37;64H1[4;15H[?12l[?25h[?25l[46m)[mu()[37;64H2[4;16H[?12l[?25h[37;1H[K[4;15H[?25l[37;61H4,11[10CAll[4;15H[?12l[?25h[?25l[46m()[m[37;64H0[4;14H[?12l[?25h[?25l[37;1H2 more lines; before #2  8 seconds ago[37;61H[K[4;13H(){[5;5H[K[6;1H[33m  6 [m[6;5H[K[7;1H[33m  7 [m}[7;6H[K[37;61H6,0-1[9CAll[6;5H[?12l[?25h[?25l[37;1H7 fewer lines; before #1  27 seconds ago[37;61H[K[1;5H[K[2;1H[1m[34m~                                                                             [3;1H~                                                                             [4;1H~                                                                             [5;1H~                                                                             [6;1H~                                                                             [7;1H~                                                                             [m[37;61H0,0-1[9CAll[1;5H[?12l[?25h[?25l[37;1HAlready at oldest change[37;27H[K[37;61H0,0-1[9CAll[1;5H[?12l[?25h[?25l[37;1H7 more lines; after #1  32 seconds ago[37;61H[K[1;4H[33m [m[35m#include [m[31m<iostream>[m
+[33m  2 using[m [32mnamespace[m std;[2;25H[K[3;1H[33m  3 [m[3;5H[K[4;1H[33m  4 [m[32mint[m main(){[4;16H[K[5;1H[33m  5 [m[5;5H[K[6;1H[33m  6 [m[6;5H[K[7;1H[33m  7 [m}[7;6H[K[37;61H1,1[11CAll[1;5H[?12l[?25h[?25l[37;61H2[2;5H[?12l[?25h[?25l[37;61H3,0-1[3;5H[?12l[?25h[?25l[37;61H4,1  [4;5H[?12l[?25h[?25l[37;61H5,0-1[5;5H[?12l[?25h[?25l[37;1H[1m-- INSERT --[m[37;13H[K[37;61H5,1[11CAll[5;5H[?12l[?25h[?25l[6;4H[33m [m}
+[1m[34m~                                                                             [m[4;15H[46m{[6;5H}[m[37;61H4,12[4;16H[?12l[?25h[?25l{[6;5H}[37;61H5,1 [5;5H[?12l[?25h[?25l[33m [m}
+[1m[34m~                                                                             [m[4;15H[46m{[5;5H}[m[37;61H4,12[4;16H[?12l[?25h[?25l[5;4H[33m [m[46m [m
+[33m  6 [m}[6;6H[K[4;15H{[5;5H [37;61H5,5 [5;9H[?12l[?25h[?25l c[37;63H6[5;10H[?12l[?25h[?25lco[37;63H7[5;11H[?12l[?25h[?25l[30m[43mcout[m[37;63H9[5;13H[?12l[?25h[?25l[37;63H10[5;14H[?12l[?25h[?25l <[37;64H1[5;15H[?12l[?25h[?25l<<[37;64H2[5;16H[?12l[?25h[?25l[37;64H3[5;17H[?12l[?25h[?25l [31m"[m[37;64H4[5;18H[?12l[?25h[?25l[31m"t[m[37;64H5[5;19H[?12l[?25h[?25l[31mth[m[37;64H6[5;20H[?12l[?25h[?25l[31mhi[m[37;64H7[5;21H[?12l[?25h[?25l[31mis[m[37;64H8[5;22H[?12l[?25h[?25l[31m [m[37;64H9[5;23H[?12l[?25h[?25l[31m w[m[37;63H20[5;24H[?12l[?25h[?25l[31mwo[m[37;64H1[5;25H[?12l[?25h[?25l[31mor[m[37;64H2[5;26H[?12l[?25h[?25l[31mrk[m[37;64H3[5;27H[?12l[?25h[?25l[31mks[m[37;64H4[5;28H[?12l[?25h[?25l[31ms![m[37;64H5[5;29H[?12l[?25h[?25l[31m!"[m[37;64H6[5;30H[?12l[?25h[?25l[37;64H7[5;31H[?12l[?25h[?25l <[37;64H8[5;32H[?12l[?25h[?25l<<[37;64H9[5;33H[?12l[?25h[?25l[37;63H30[5;34H[?12l[?25h[?25l e[37;64H1[5;35H[?12l[?25h[?25len[37;64H2[5;36H[?12l[?25h[?25lnd[37;64H3[5;37H[?12l[?25h[?25ldl[37;64H4[5;38H[?12l[?25h[?25ll;[37;64H5[5;39H[?12l[?25h[?25l[6;4H[33m [m 
+[33m  7 [m}[7;6H[K[37;61H6,5 [6;9H[?12l[?25h[?25l r[37;63H6[6;10H[?12l[?25h[?25lre[37;63H7[6;11H[?12l[?25h[?25let[37;63H8[6;12H[?12l[?25h[?25ltu[37;63H9[6;13H[?12l[?25h[?25lur[37;63H10[6;14H[?12l[?25h[?25l[33mreturn[m[37;64H1[6;15H[?12l[?25h[?25l[37;64H2[6;16H[?12l[?25h[?25l [31m0[m[37;64H3[6;17H[?12l[?25h[?25l[31m0[m;[37;64H4[6;18H[?12l[?25h[37;1H[K[6;17H[?25l[37;61H6,13[10CAll[6;17H[?12l[?25h[?25l[37;61H[K[37;1H:[?12l[?25hq[?25l[?12l[?25h[?25l[37;2H[K[37;2H[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h[?25l"sample.cpp" [New] 7L, 105C written
+[?1l>[?12l[?25h[?1049lsthak004@hammer.cs.ucr.edu$ g++ --  sample.cpp
+sthak004@hammer.cs.ucr.edu$ ls -a
+.      bin	Makefile		      sample	  tests
+..     .git	.nfs000000000076652e000002d2  sample.cpp
+a.out  LICENSE	README.md		      src
+sthak004@hammer.cs.ucr.edu$ ./a.out
+this works!
+sthak004@hammer.cs.ucr.edu$ rm  ls -l
+total 44
+-rwx------ 1 sthak004 classes 8208 Apr 19 22:56 a.out
+drwx------ 2 sthak004 classes 4096 Apr 19 22:26 bin
+-rw------- 1 sthak004 classes 1076 Apr 12 15:14 LICENSE
+-rw------- 1 sthak004 classes  259 Apr 18 16:17 Makefile
+-rw------- 1 sthak004 classes  404 Apr 19 22:19 README.md
+drwx------ 2 sthak004 classes 4096 Apr 19 22:50 sample
+-rw------- 1 sthak004 classes  105 Apr 19 22:56 sample.cpp
+drwx------ 2 sthak004 classes 4096 Apr 19 21:15 src
+drwx------ 2 sthak004 classes 4096 Apr 19 22:47 tests
+sthak004@hammer.cs.ucr.edu$ man execvp
+sh: fork: retry: Resource temporarily unavailable
+sh: fork: retry: Resource temporarily unavailable
+sh: fork: retry: Resource temporarily unavailable
+sh: fork: retry: Resource temporarily unavailable
+sh: fork: retry: Resource temporarily unavailable
+sh: fork: retry: Resource temporarily unavailable
+sh: fork: retry: Resource temporarily unavailable
+sh: fork: retry: Resource temporarily unavailable
+
+~/rshell
+sthak004@hammer $ ls
+[0m[01;32ma.out[0m*  [01;34mbin[0m/  LICENSE  Makefile  README.md  [01;34msample[0m/  sample.cpp  [01;34msrc[0m/  [01;34mtests[0m/
+[m~/rshell
+sthak004@hammer $ rm same[Kple.co[K[K[K[K[K[K[K[K[K[K[K[Kls [K[K[Kbin/rhs[K[Kshell
+sthak004@hammer.cs.ucr.edu$ ls
+a.out  bin  LICENSE  Makefile  README.md  sample  sample.cpp  src  tests
+sthak004@hammer.cs.ucr.edu$ rm a.out && rm sample.cpp
+sthak004@hammer.cs.ucr.edu$ ls
+a.out  bin  LICENSE  Makefile  README.md  sample  sample.cpp  src  tests
+sthak004@hammer.cs.ucr.edu$ #m both are still there are you can see                                    t disf    nn on functioning logical operators as sen en above^
+sthak004@hammer.cs.ucr.edu$ rm a.out
+sthak004@hammer.cs.ucr.edu$ ls
+bin  LICENSE  Makefile	README.md  sample  sample.cpp  src  tests
+sthak004@hammer.cs.ucr.edu$ rm sample.cpp
+sthak004@hammer.cs.ucr.edu$ ls
+bin  LICENSE  Makefile	README.md  sample  src	tests
+sthak004@hammer.cs.ucr.edu$ rm  dir sample
+sthak004@hammer.cs.ucr.edu$ ls
+bin  LICENSE  Makefile	README.md  src	tests
+sthak004@hammer.cs.ucr.edu$ ind   #individual commands work as you can see
+sthak004@hammer.cs.ucr.edu$ exit
+~/rshell
+sthak004@hammer $ exit
+exit
+
+Script done on Sun 19 Apr 2015 11:05:58 PM PDT
