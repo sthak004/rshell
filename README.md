@@ -8,5 +8,5 @@ Rshell emulates all behaviors a normal bash shell would do
 ` ``$ make`` `
 ` ``$ bin/rshell`` `
 
-Bug and Limitations
+#Bug and Limitations
 *only single command currently work. As in `ls` or `ls-a`.
