@@ -3,12 +3,12 @@ Rshell emulates all behaviors a normal bash shell would do
 
 ##Installation
 ` ``$ git clone https://github.com/sthak004/rshell.git`` `
-$ cd rshell `` `
+` ``$ cd rshell `` `
 ` ``$ git checkout hw0`` `
 ` ``$ make`` `
 ` ``$ bin/rshell`` `
 
-#Bug and Limitations
+#Bugs and Limitations
 *only single commands currently work, as in `ls-a` or `cat <filename>`.
 
 *no logic operator capability yet
