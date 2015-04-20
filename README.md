@@ -9,4 +9,6 @@ Rshell emulates all behaviors a normal bash shell would do
 ` ``$ bin/rshell`` `
 
 #Bug and Limitations
-*only single command currently work. As in `ls` or `ls-a`.
+*only single commands currently work, as in `ls-a` or `cat <filename>`.
+*no logic operator capability yet
+*`cd` not supported
