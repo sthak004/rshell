@@ -70,16 +70,14 @@ void splitSpaces(char* argument, char **pendingArgs, int pos){
     char *token = strtok(argument, " ");
     while(token != NULL){
         cout << token << endl;
+
+        pendingArgs[pos] = strdup(token);
+
         token = strtok(NULL, " ");
-
-        pendingArgs[pos] = token;
         pos++;
-
     }
 
     pendingArgs[pos] = NULL;
-    cout << "position: " << pos << endl;
-    cout << "arguments: " << pendingArgs[0] << ' ' << pendingArgs[1] << ' ' << pendingArgs[2];
     return;
 }
 
@@ -87,27 +85,27 @@ void splitSpaces(char* argument, char **pendingArgs, int pos){
 
 
 
-int executeCommand(char **pendingArgs){
-    int  pid = fork();
+int executeCommand(char **args){
+    int pid = fork();
 
     if(pid == -1){
         perror("There was some error with fork()");
         exit(1);
     }
     else if(pid == 0){
-        if(-1 == execvp(pendingArgs[0], pendingArgs)){
+        if(execvp(args[0], args) == -1 ){
             perror("There was an error with execvp");
             exit(1);
         }
     }
     else if(pid > 0){
-        if(wait(0) == -1){
-            perror("There was some error with wait");
+        if(-1 == wait(0)){
+            perror("There was an error with wait");
             exit(1);
         }
     }
 
-    return 0; //if everything goes well, return 0 
+    return 0;
 }
 
 
@@ -166,15 +164,19 @@ void run(vector<string> &connectors, char **cmds){
     char *pendingArgs[10000]; //arguments waiting to be executed depending on connector 
     if(connectors.size() == 0){
         if(noSpace(cmds[0])){
-           pendingArgs[0] = cmds[0];
-           pendingArgs[1] = NULL;
-           executeCommand(pendingArgs);
+           if(executeCommand(cmds) != 0){
+               cout << "Error calling execvp";
+               return;
+           }
            return;
         }
         else if(connectors.size() == 0 && sizeof(cmds[0]) >= 2){
             cout << "PASSES FIRST TEST" << endl;
             splitSpaces(cmds[0], pendingArgs, 0);
-            executeCommand(pendingArgs);
+            if(executeCommand(pendingArgs) != 0){
+                cout << "Error calling execvp";
+                return;
+            }
             return;
         }
     }
