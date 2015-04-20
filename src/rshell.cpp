@@ -69,7 +69,7 @@ void displayPrompt(){
 void splitSpaces(char* argument, char **pendingArgs, int pos){
     char *token = strtok(argument, " \t");
     while(token != NULL){
-        cout << token << endl;
+        //cout << token << endl;
 
         pendingArgs[pos] = strdup(token);
 
@@ -85,7 +85,7 @@ void splitSpaces(char* argument, char **pendingArgs, int pos){
 
 
 
-int executeCommand(char **args){
+int executeCommand(char **argv){
     int pid = fork();
 
     if(pid == -1){
@@ -93,7 +93,7 @@ int executeCommand(char **args){
         exit(1);
     }
     else if(pid == 0){
-        if(execvp(args[0], args) == -1 ){
+        if(execvp(argv[0], argv) == -1 ){
             perror("There was an error with execvp");
             exit(1);
         }
@@ -110,20 +110,22 @@ int executeCommand(char **args){
 
 
 
-int extractCommands(string &commandLine, char **cmds){
+int extractCommands(string commandLine, char **cmds){
     const char* args = commandLine.c_str(); //the user input is converted to a const char* as we need it for execvp
     char* args_Mutatable = const_cast<char*>(args); //it needs to be mutable for us to tokenize it
     char *single_command;
     single_command = strtok(args_Mutatable, ";&|\t"); //execute strtok with delimeters
     
+     
     int numOfArgs = 0; //when you add one --> argv[1]
 
 
     while(single_command != NULL){
         //cout << single_command << endl;
+     
         cmds[numOfArgs] = strdup(single_command); //this processes each command into the command array for execution
-        cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
-        cout << endl;
+        //cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
+        //cout << endl;
         single_command = strtok(NULL, ";&|i\t");
         numOfArgs++;
     }
@@ -131,6 +133,18 @@ int extractCommands(string &commandLine, char **cmds){
     cmds[numOfArgs] = NULL;
     return numOfArgs;
 }
+
+
+void comments(string &commandLine){
+    int startingLocation = commandLine.find_first_of("#");
+    if(startingLocation != -1){
+        commandLine.erase(startingLocation);   
+    }
+}
+
+
+
+
 
 
 vector<string>  extractConnectors(string inputLine){
@@ -177,8 +191,13 @@ void run(vector<string> &connectors, char **cmds){
                 return;
             }
     }
-}
 
+    for(unsigned int i = 0; i < connectors.size(); i++){
+        if(connectors.at(i) == ";"){
+            ;
+        }
+    }
+}
 
 int main(){
     string userInput; //command line in string format
@@ -187,21 +206,15 @@ int main(){
         displayPrompt(); //displays current user and hostname
 
         getline(cin, userInput); //get's input from user and stores it in a string
+
+        //CHECK FOR COMMENTS BEFORE ANYTHING
+        comments(userInput);
  
         /*gets all the delimeters and stores into a vector*/
         vector<string> connectors = extractConnectors(userInput);
-        cout << "CONNECTORS: ";
-        for(unsigned i = 0; i < connectors.size(); ++i){
-            cout << connectors.at(i) << ' ';
-        }
-        cout << endl;
-
-
         //cout << userInput << endl; //NEED TO DELETE UPON COMPLETETION
 
-
         int numArgs = extractCommands(userInput, cmds); //retrieve number of arguments by parsing the string
-
 
         if(numArgs <= 0){continue;} //if there are no arguments, simply continue to the next iteration
 
@@ -214,6 +227,7 @@ int main(){
             cout << "Error in executing commands" << endl;
         }*/
 
+        //exeRshell(tempInput, cmds);
     }while(1);
       
 
