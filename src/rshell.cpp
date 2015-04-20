@@ -67,13 +67,13 @@ void displayPrompt(){
 
 
 void splitSpaces(char* argument, char **pendingArgs, int pos){
-    char *token = strtok(argument, " ");
+    char *token = strtok(argument, " \t");
     while(token != NULL){
         cout << token << endl;
 
         pendingArgs[pos] = strdup(token);
 
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " \t");
         pos++;
     }
 
@@ -114,7 +114,7 @@ int extractCommands(string &commandLine, char **cmds){
     const char* args = commandLine.c_str(); //the user input is converted to a const char* as we need it for execvp
     char* args_Mutatable = const_cast<char*>(args); //it needs to be mutable for us to tokenize it
     char *single_command;
-    single_command = strtok(args_Mutatable, ";&|"); //execute strtok with delimeters
+    single_command = strtok(args_Mutatable, ";&|\t"); //execute strtok with delimeters
     
     int numOfArgs = 0; //when you add one --> argv[1]
 
@@ -124,7 +124,7 @@ int extractCommands(string &commandLine, char **cmds){
         cmds[numOfArgs] = strdup(single_command); //this processes each command into the command array for execution
         cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
         cout << endl;
-        single_command = strtok(NULL, ";&|");
+        single_command = strtok(NULL, ";&|i\t");
         numOfArgs++;
     }
 
@@ -163,38 +163,20 @@ bool noSpace(char* single){
 void run(vector<string> &connectors, char **cmds){
     char *pendingArgs[10000]; //arguments waiting to be executed depending on connector 
     if(connectors.size() == 0){
-        if(noSpace(cmds[0])){
-           if(executeCommand(cmds) != 0){
-               cout << "Error calling execvp";
-               return;
-           }
-           return;
+        splitSpaces(cmds[0], pendingArgs, 0);
+        if(executeCommand(pendingArgs) != 0){
+            cout << "Error calling execvp";
+            return;
         }
-        else if(connectors.size() == 0 && sizeof(cmds[0]) >= 2){
+    }
+    else if(connectors.size() == 0 && sizeof(cmds[0]) >= 2){
             cout << "PASSES FIRST TEST" << endl;
             splitSpaces(cmds[0], pendingArgs, 0);
             if(executeCommand(pendingArgs) != 0){
                 cout << "Error calling execvp";
                 return;
             }
-            return;
-        }
     }
-    /*for(unsigned int i = 0; i < connectors.size(); ++i){
-        if(connectors.at(i) == ";"){
-            cout << "BEFORE: " << cmds[i] << endl;
-            pendingArgs[i] = cmds[i];
-            cout << "AFTER: " << pendingArgs[i] << endl;
-            executeCommand(pendingArgs);
-            cout << "REACHED3" << endl;
-            splitSpaces(cmds[i], pendingArgs, i);
-            cout << "REACHED4" << endl;
-            cout << "First arg: " << pendingArgs[0]; 
-            cout << "READED5" << endl;
-            cout << "Second arg: " << pendingArgs[1];
-            executeCommand(pendingArgs);
-        }
-    }*/
 }
 
 
