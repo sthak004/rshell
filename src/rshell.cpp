@@ -31,59 +31,6 @@ void displayPrompt(){
 }
 
 
-/*void splitSpaces(char* argument, char **pendingArgs, int pos){
-    string temp(argument);
-    string first_word, second_word;
-
-    for(unsigned int i = 0; i < temp.size(); ++i){
-        if( !(isspace(temp.at(i))) && (second_word.size() == 0) ){
-            first_word += temp.at(i);
-        }
-        else if( (isspace(temp.at(i)))){
-            if( !(isspace(temp.at(i+1))) ){
-                second_word += temp.at(i+1);
-                ++i;   
-            }
-        }
-        else if( !(isspace(temp.at(i))) ){
-            second_word += temp.at(i);
-        }
-    }
-
-    cout << "THE FIRST PIECE: " << first_word << endl;
-    pendingArgs[pos] = const_cast<char*>(first_word.c_str());
-    
-    pos++;
-    
-    cout << "THE SECOND PIECE: " << second_word << endl;
-    pendingArgs[pos] = const_cast<char*>(second_word.c_str());
-
-    pos++;
-    pendingArgs[pos] = NULL; //YOUR ARGUMENT ARRAY MUST END IN A NULL PTR
-    return;
-}*/
-
-
-
-
-void splitSpaces(char* argument, char **pendingArgs, int pos){
-    char *token = strtok(argument, " \t");
-    while(token != NULL){
-        //cout << token << endl;
-
-        pendingArgs[pos] = strdup(token);
-
-        token = strtok(NULL, " \t");
-        pos++;
-    }
-
-    pendingArgs[pos] = NULL;
-    return;
-}
-
-
-
-
 
 int executeCommand(char **argv){
     int pid = fork();
@@ -124,8 +71,8 @@ int extractCommands(string commandLine, char **cmds){
         //cout << single_command << endl;
      
         cmds[numOfArgs] = strdup(single_command); //this processes each command into the command array for execution
-        //cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
-        //cout << endl;
+        cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
+        cout << endl;
         single_command = strtok(NULL, ";&|i\t");
         numOfArgs++;
     }
@@ -144,25 +91,6 @@ void comments(string &commandLine){
 
 
 
-
-
-
-vector<string>  extractConnectors(string inputLine){
-    vector<string> cnctors;
-    for(unsigned int i = 0; i < inputLine.size(); ++i){
-        if(inputLine.at(i)  == ';'){
-            cnctors.push_back(";");   
-        }
-        if((inputLine.at(i) == '&' && inputLine.at(i+1) == '&')){
-            cnctors.push_back("&&");
-        }
-        if((inputLine.at(i) == '|' && inputLine.at(i+1) == '|')){
-            cnctors.push_back("||");
-        }
-    }
-    return cnctors;
-}
-
 bool noSpace(char* single){
     string temp(single);
     for(unsigned int i = 0; i < temp.size(); ++i){
@@ -174,62 +102,42 @@ bool noSpace(char* single){
     return true;
 }
 
-void run(vector<string> &connectors, char **cmds){
-    char *pendingArgs[10000]; //arguments waiting to be executed depending on connector 
-    if(connectors.size() == 0){
-        splitSpaces(cmds[0], pendingArgs, 0);
-        if(executeCommand(pendingArgs) != 0){
-            cout << "Error calling execvp";
-            return;
-        }
-    }
-    else if(connectors.size() == 0 && sizeof(cmds[0]) >= 2){
-            cout << "PASSES FIRST TEST" << endl;
-            splitSpaces(cmds[0], pendingArgs, 0);
-            if(executeCommand(pendingArgs) != 0){
-                cout << "Error calling execvp";
-                return;
-            }
-    }
 
-    for(unsigned int i = 0; i < connectors.size(); i++){
-        if(connectors.at(i) == ";"){
-            ;
+
+vector<string> getConnectors(string cmdLine){
+    vector<string> connectors;
+
+    for(unsigned int i = 0; i < cmdLine.size(); ++i){
+        if(cmdLine.at(i) == ';'){
+            connectors.push_back(";");
+        }
+        else if( (i+1) < cmdLine.size()){
+            if(cmdLine.at(i) == '&' && cmdLine.at(i+1) == '&'){
+                connectors.push_back("&&");
+            }
+            else if(cmdLine.at(i) == '|' && cmdLine.at(i+1) == '|'){
+                connectors.push_back("||");
+            }
         }
     }
+    return connectors;
 }
 
+
 int main(){
-    string userInput; //command line in string format
-    char *cmds[10000];
-    do{ 
-        displayPrompt(); //displays current user and hostname
+    string userInput; //command line in string format 
+    do{
+        displayPrompt(); //display hostname
 
-        getline(cin, userInput); //get's input from user and stores it in a string
+        getline(cin, userInput); // get input
 
-        //CHECK FOR COMMENTS BEFORE ANYTHING
-        comments(userInput);
- 
-        /*gets all the delimeters and stores into a vector*/
-        vector<string> connectors = extractConnectors(userInput);
-        //cout << userInput << endl; //NEED TO DELETE UPON COMPLETETION
-
-        int numArgs = extractCommands(userInput, cmds); //retrieve number of arguments by parsing the string
-
-        if(numArgs <= 0){continue;} //if there are no arguments, simply continue to the next iteration
-
-        /*checks if first argument is exit and quits iff it's the only argument*/
-        if( (strcmp(cmds[0], "exit") == 0) && (numArgs == 1) ) { break; }
+        comments(userInput); // remove and commented input
         
-        run(connectors, cmds);
-
-        /*if(executeCommand(cmds) != 0){
-            cout << "Error in executing commands" << endl;
-        }*/
-
-        //exeRshell(tempInput, cmds);
+        vector<string> testConnector = getConnectors(userInput); 
+        for(unsigned i = 0; i < testConnector.size(); ++i){
+            cout << testConnector.at(i) << ' ';
+        }
+        cout << endl;
     }while(1);
-      
-
     return 0;
 }
