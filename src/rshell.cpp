@@ -31,8 +31,14 @@ void displayPrompt(){
 }
 
 
+/*this function will execute the command in the vector of char**/
+int executeCommand(vector<char*> rmSpcCmds){
+    char *argv[10000]; //will store the command
 
-int executeCommand(char **argv){
+    for(unsigned int i = 0; i < rmSpcCmds.size(); ++i){
+        argv[i] = rmSpcCmds.at(i);
+    }
+
     int pid = fork();
 
     if(pid == -1){
@@ -71,8 +77,8 @@ int extractCommands(string commandLine, char **cmds){
         //cout << single_command << endl;
      
         cmds[numOfArgs] = strdup(single_command); //this processes each command into the command array for execution
-        cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
-        cout << endl;
+        /*cout << "at position " << numOfArgs << ": " << cmds[numOfArgs];
+        cout << endl;*/
         single_command = strtok(NULL, ";&|i\t");
         numOfArgs++;
     }
@@ -123,9 +129,65 @@ vector<string> getConnectors(string cmdLine){
     return connectors;
 }
 
+/*this function will take the vectors of commands 
+and remove all spaces and take each component and place
+it in the vector of char*'s for execution*/
+vector<char*> removeSpaces(vector<char*> singles){
+    vector<char*> candycorn;
+    
+    /*this should take a SINGLE COMMAND and remove and spaces or tabs
+      and put it in the candycorn vector*/ 
+
+    char* token = strtok(singles.at(0), " \t");
+    while(token != NULL){
+        candycorn.push_back(token);
+
+        token = strtok(NULL, " \t");
+
+    }
+    return candycorn;
+}
+
+
+
+void performLogic(vector<string> links, char **args){
+    vector<char *> nextCommand; //this is the current command that will be exeucuted
+
+    //if there is a single command as an input...
+    //this is determined by the number of operators (logical or not)
+    if(links.size() == 0){
+        //add command to vector
+        nextCommand.push_back(args[0]);
+        
+        //if the command has no space, then do not remove spaces ex. pwd
+        if(noSpace(args[0])){
+            executeCommand(nextCommand);
+            return;
+        }
+
+
+        //OTHERWISE, we still have to remove spaces
+        vector<char*> PASSTOEXEC = removeSpaces(nextCommand);
+        executeCommand(PASSTOEXEC);
+        return; 
+    }
+
+    for(unsigned int i = 0; i < links.size(); ++i){
+        if( (i+1) < links.size() ){
+            if(links.at(i) == "&&"){  
+                //splitSpaces needed here
+                nextCommand.push_back(args[i]); // stores the first comman
+                cout << "nextCommand currently holds: " << nextCommand.at(0) << endl;
+            }
+        }
+    }
+}
+
 
 int main(){
     string userInput; //command line in string format 
+    char *special[10000]; //holds all the commands
+
     do{
         displayPrompt(); //display hostname
 
@@ -133,11 +195,16 @@ int main(){
 
         comments(userInput); // remove and commented input
         
-        vector<string> testConnector = getConnectors(userInput); 
-        for(unsigned i = 0; i < testConnector.size(); ++i){
-            cout << testConnector.at(i) << ' ';
-        }
-        cout << endl;
+        vector<string> connectors = getConnectors(userInput); 
+
+        int numArgs = extractCommands(userInput, special); 
+
+        if(numArgs <= 0){continue;} //if there are no arguments, continue to next iteration
+
+        if ((strcmp(special[0], "exit") == 0) && (numArgs == 1)) {break;}
+
+        performLogic(connectors, special);
+
     }while(1);
     return 0;
 }
