@@ -148,38 +148,37 @@ vector<char*> removeSpaces(vector<char*> singles){
     return candycorn;
 }
 
-
+template<typename T>
+void printVector(vector<T> &temp){
+   for(unsigned int i = 0; i < temp.size(); ++i){
+       cout << "Pos " << i << ": " << temp.at(i) << endl; 
+   }
+}
 
 void performLogic(vector<string> links, char **args){
+
     vector<char *> nextCommand; //this is the current command that will be exeucuted
 
-    //if there is a single command as an input...
-    //this is determined by the number of operators (logical or not)
+    //for single commands that contain NO logic
     if(links.size() == 0){
         //add command to vector
         nextCommand.push_back(args[0]);
-        
+
         //if the command has no space, then do not remove spaces ex. pwd
         if(noSpace(args[0])){
+            printVector(nextCommand);
             executeCommand(nextCommand);
+            //ERASE EVERYTHING IN VECTOR
+            nextCommand.erase(nextCommand.begin(), nextCommand.end());
             return;
         }
-
-
+        
         //OTHERWISE, we still have to remove spaces
         vector<char*> PASSTOEXEC = removeSpaces(nextCommand);
         executeCommand(PASSTOEXEC);
-        return; 
-    }
-
-    for(unsigned int i = 0; i < links.size(); ++i){
-        if( (i+1) < links.size() ){
-            if(links.at(i) == "&&"){  
-                //splitSpaces needed here
-                nextCommand.push_back(args[i]); // stores the first comman
-                cout << "nextCommand currently holds: " << nextCommand.at(0) << endl;
-            }
-        }
+        //ERASE EVERYTHING IN VECTOR
+        nextCommand.erase(nextCommand.begin(), nextCommand.end());
+        return;
     }
 }
 
