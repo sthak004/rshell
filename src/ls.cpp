@@ -111,27 +111,6 @@ int main(int argc, char**argv){
         }
     }
 
-
-    /*for(int i = 0; i < argc; i++){
-        for(unsigned int j = 0; j < flags.size(); j++){
-
-            if(argv[2][i+1] == flags.at(j)){ //[2] is to start at flags
-                                             //[i+1] is to ignore '-'
-                if(flags.at(j) == 'a'){
-                    isFlag_a = true;
-                    if(isFlag_a) cout << "BINGO! We have -a!" << endl;
-                }
-                else if(flags.at(j) == 'l'){
-                    isFlag_l = true;
-                    if(isFlag_l) cout << "HOORAY! We have -l" << endl;
-                }
-                else if(flags.at(j) == 'R'){
-                    isFlag_R = true;
-                    if(isFlag_R) cout << "BOOOYA! We have -R" << endl;
-                }
-            }
-        }
-    }*/
 //  --------------------------------------------------------------------
 
     return 0;
