@@ -34,6 +34,30 @@ void printARGV(char **argv){
     cout << endl;
 }
 
+
+/*this function will get all the file descriptors or directors and put
+ them into a vector of strings called file_O_dir*/
+
+/*vector<string> getFiles_Dir (char **argv, pos_){
+    string targets; //this is the rest of the targest after the flags
+    vector<string> importantStuff;
+
+    unsigned int pos = pos_;
+    while(argv[pos] != '\0'){
+        cout << " << argv[pos]; " << argv[pos] << endl;
+        cout << endl;
+        pos++;
+    }
+    cout << endl;
+
+
+
+    return importantStuff;
+}*/
+
+
+
+
 int main(int argc, char**argv){
 
     //test and case variables
@@ -48,8 +72,8 @@ int main(int argc, char**argv){
     flags.push_back('l');
     flags.push_back('R');
 
-    //vector of directories
-    vector<string> dir;
+    //vector of files & directories
+    vector<string> files_dirs;
 //  --------------------------------------------------------------------
 
     bool isFlag_a = false; //bool to determine if the flag is -a
@@ -73,44 +97,47 @@ int main(int argc, char**argv){
         cout << "Error: no form of ls" << endl;
         exit(1);
     }
-
     /*did the user type is ls only?*/
     else if(argc > 1 && argc <= 2 && argv[1] == ls){
         is_ls = true;
-        if(is_ls) cout << "Only run ls" << endl;
+        if(is_ls) cout << "Only run ls on current directory" << endl;
         return 0;
     }
-//  --------------------------------------------------------------------
 
-    /*supposed to determine which flags are called and which directories,
-      if any, are listed */
 
-    //grabs the flags
-    if(*(argv[2]) == dash){
-        flags_ = argv[2]; //put the cstring in a string
-        flags_.erase(flags_.begin()); //erase the '-' at the beginning
+    if(argc > 1 && argv[1] == ls){ //if there is ls followed by a dir or file
+        ;
     }
+    else{
+        for(int x = 0; x < argc; ++x){
+            if(*(argv[x]) == dash){ //grabs flags
+                flags_ = argv[x]; //put the cstring in a string
+                flags_.erase(flags_.begin()); //erase the '-' at the beginning
 
-    //go through each flag_ and compare with the vector of flags
-    for(unsigned int i = 0 ; i < flags_.size(); ++i){
-        for(unsigned int j = 0; j < flags.size(); ++j){
-            if(flags_.at(i) == flags.at(j)){
-                if(flags.at(j) == 'a'){
-                    isFlag_a = true;
-                    if(isFlag_a) cout << "We have a!" << endl;
-                }
-                else if(flags.at(j) == 'l'){
-                    isFlag_l = true;
-                    if(isFlag_l) cout << "We have l!" << endl;
-                }
-                else if(flags.at(j) == 'R'){
-                    isFlag_R = true;
-                    if(isFlag_R) cout << "We have R!" << endl;
+                //go through each flag_ and compare with the vector of flags
+                for(unsigned int i = 0 ; i < flags_.size(); ++i){
+                    for(unsigned int j = 0; j < flags.size(); ++j){
+                        if(flags_.at(i) == flags.at(j)){
+                            if(flags.at(j) == 'a'){
+                                isFlag_a = true;
+                                if(isFlag_a) cout << "We have a!" << endl;
+                            }
+                            else if(flags.at(j) == 'l'){
+                                isFlag_l = true;
+                                if(isFlag_l) cout << "We have l!" << endl;
+                            }
+                            else if(flags.at(j) == 'R'){
+                                isFlag_R = true;
+                                if(isFlag_R) cout << "We have R!" << endl;
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
+    //files_dirs = getFiles_Dir(argv, );
 //  --------------------------------------------------------------------
 
     return 0;
