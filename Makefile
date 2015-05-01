@@ -1,5 +1,5 @@
 FLAGS=-Wall -Werror -ansi -pedantic
-STD=-std=c++11
+STD= --std=c++11
 
 all: rshell ls
 
