@@ -36,8 +36,10 @@ void printARGV(char **argv){
 
 int main(int argc, char**argv){
 
-    //case variables
+    //test and case variables
+    string flags_;
     string ls = "ls";
+    char dash = '-';
 //  --------------------------------------------------------------------
 
     //vectors of flags -a, -l, -R
@@ -45,6 +47,9 @@ int main(int argc, char**argv){
     flags.push_back('a');
     flags.push_back('l');
     flags.push_back('R');
+
+    //vector of directories
+    vector<string> dir;
 //  --------------------------------------------------------------------
 
     bool isFlag_a = false; //bool to determine if the flag is -a
@@ -77,11 +82,39 @@ int main(int argc, char**argv){
     }
 //  --------------------------------------------------------------------
 
-
     /*supposed to determine which flags are called and which directories,
       if any, are listed */
-    for(int i = 0; i < argc; i++){
+
+    //grabs the flags
+    if(*(argv[2]) == dash){
+        flags_ = argv[2]; //put the cstring in a string
+        flags_.erase(flags_.begin()); //erase the '-' at the beginning
+    }
+
+    //go through each flag_ and compare with the vector of flags
+    for(unsigned int i = 0 ; i < flags_.size(); ++i){
+        for(unsigned int j = 0; j < flags.size(); ++j){
+            if(flags_.at(i) == flags.at(j)){
+                if(flags.at(j) == 'a'){
+                    isFlag_a = true;
+                    if(isFlag_a) cout << "BINGO! We have a!" << endl;
+                }
+                else if(flags.at(j) == 'l'){
+                    isFlag_l = true;
+                    if(isFlag_l) cout << "HOORAY! We have l" << endl;
+                }
+                else if(flags.at(j) == 'R'){
+                    isFlag_R = true;
+                    if(isFlag_R) cout << "BOOOYA! We have R" << endl;
+                }
+            }
+        }
+    }
+
+
+    /*for(int i = 0; i < argc; i++){
         for(unsigned int j = 0; j < flags.size(); j++){
+
             if(argv[2][i+1] == flags.at(j)){ //[2] is to start at flags
                                              //[i+1] is to ignore '-'
                 if(flags.at(j) == 'a'){
@@ -98,7 +131,7 @@ int main(int argc, char**argv){
                 }
             }
         }
-    }
+    }*/
 //  --------------------------------------------------------------------
 
     return 0;
