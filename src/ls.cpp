@@ -97,15 +97,15 @@ int main(int argc, char**argv){
             if(flags_.at(i) == flags.at(j)){
                 if(flags.at(j) == 'a'){
                     isFlag_a = true;
-                    if(isFlag_a) cout << "BINGO! We have a!" << endl;
+                    if(isFlag_a) cout << "We have a!" << endl;
                 }
                 else if(flags.at(j) == 'l'){
                     isFlag_l = true;
-                    if(isFlag_l) cout << "HOORAY! We have l" << endl;
+                    if(isFlag_l) cout << "We have l!" << endl;
                 }
                 else if(flags.at(j) == 'R'){
                     isFlag_R = true;
-                    if(isFlag_R) cout << "BOOOYA! We have R" << endl;
+                    if(isFlag_R) cout << "We have R!" << endl;
                 }
             }
         }
