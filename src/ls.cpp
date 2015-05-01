@@ -122,6 +122,36 @@ vector<char*> open_direct(string magic){
     return filenames;
 }
 
+void ls_multiple(vector<string> &file_dir){
+    for(unsigned int i = 0; i < file_dir.size(); ++i){
+        unsigned int j;
+
+        //CHECK THIS STATEMENT!!!
+        vector<char*> contents_ = open_direct((file_dir.at(i)));
+
+        /*remove any hidden files (files that begin with a '.')*/
+        char dot = '.';
+        unsigned int totalsize = contents_.size();
+        for(j = 0; j < totalsize; ++j){
+            if(*(contents_.at(j)) == dot){
+                contents_.erase(contents_.begin() + j); //remove that file
+                totalsize--; //after you erase you -1 from size
+                j = 0; //after you -1 from size, you reset i
+            }
+        }
+
+        //sort the files within directory
+        sort(contents_.begin(), contents_.end(), compareTwo);
+
+        cout << file_dir.at(j) << ":" << endl; //formatting..
+
+        //print the files to standard out
+        printVec(contents_);
+
+        cout << endl; //formatting..
+    }
+}
+
 int main(int argc, char**argv){
 
     //test and case variables
@@ -167,8 +197,9 @@ int main(int argc, char**argv){
         if(is_ls) ;
 
         files_dirs = getFiles_Dirs(argv); //get directories or files
+
+        //sort dictionary files so they can be executed in order
         sort(files_dirs.begin(), files_dirs.end(), compareTwo_);
-        printVec(files_dirs);
 
         //where there any directories or files that were called?
         if( !(files_dirs.size() > 0) ){
@@ -202,7 +233,8 @@ int main(int argc, char**argv){
             printVec(contents);
         }
         else{
-            ;
+            files_dirs = getFiles_Dirs(argv);
+            ls_multiple(files_dirs);
         }
     }
     else{ //is there a ls with flags and maybe files or dir
