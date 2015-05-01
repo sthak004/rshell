@@ -15,7 +15,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
-
+#include <cstddef>
 using namespace std;
 
 #define printVec(x) for(unsigned int i = 0; i < x.size(); i++) \
@@ -35,25 +35,41 @@ void printARGV(char **argv){
 }
 
 
-/*this function will get all the file descriptors or directors and put
+/*this function will get all the file descriptors or directories and put
  them into a vector of strings called file_O_dir*/
 
-/*vector<string> getFiles_Dir (char **argv, pos_){
+//anything that is not 'ls' or '-<flags>' is considered a file or dir
+
+vector<string> getFiles_Dirs (char **argv){
     string targets; //this is the rest of the targest after the flags
+
+    string ls = "ls";
+    char dash = '-';
+
     vector<string> importantStuff;
 
-    unsigned int pos = pos_;
+    unsigned int pos = 1;
     while(argv[pos] != '\0'){
-        cout << " << argv[pos]; " << argv[pos] << endl;
-        cout << endl;
-        pos++;
-    }
-    cout << endl;
+        string temp = argv[pos]; //keep the current argv part in a string
 
+        if(argv[pos] == ls){
+            pos++; //increment position to get next arg
+            continue; //continue to next iteration
+        }
+
+        if(argv[pos][0] == dash){
+            pos++; //increment position to get next arg
+            continue; //continue to next iteration
+        }
+
+        importantStuff.push_back(temp); //if both cases fail, you add it!
+
+        pos++; //increment to get next arg
+    }
 
 
     return importantStuff;
-}*/
+}
 
 
 
@@ -97,18 +113,19 @@ int main(int argc, char**argv){
         cout << "Error: no form of ls" << endl;
         exit(1);
     }
-    /*did the user type is ls only?*/
-    else if(argc > 1 && argc <= 2 && argv[1] == ls){
+    /*below are some cases for ls*/
+    else if(argc > 1  && argv[1] == ls){ //is there a ls?
         is_ls = true;
-        if(is_ls) cout << "Only run ls on current directory" << endl;
-        return 0;
-    }
+        if(is_ls) cout << "run ls depending on the size of dir vector" << endl;
 
+        files_dirs = getFiles_Dirs(argv); //get directories or files
 
-    if(argc > 1 && argv[1] == ls){ //if there is ls followed by a dir or file
-        ;
+        //where there any directories or files that were called?
+        if( !(files_dirs.size() > 0) ){
+            //call ls on the current working directory
+        }
     }
-    else{
+    else{ //is there a ls with flags and maybe files or dir
         for(int x = 0; x < argc; ++x){
             if(*(argv[x]) == dash){ //grabs flags
                 flags_ = argv[x]; //put the cstring in a string
