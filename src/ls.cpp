@@ -17,6 +17,7 @@
 #include <string>
 #include <cstring>
 #include <cstddef>
+
 using namespace std;
 
 #define printVec(x) for(unsigned int i = 0; i < x.size(); i++) \
@@ -74,13 +75,18 @@ vector<string> getFiles_Dirs (char **argv){
 
 
 /*Comparision function for two char* */
-
-
+/*needed for sorting*/
 bool compareTwo(const char* s1, const char* s2){
     return strcasecmp(s1, s2) < 0;
 }
 
-
+bool compareTwo_(string a, string b){
+    string str1( a );
+    string str2( b );
+    transform( str1.begin(), str1.end(), str1.begin(), ::tolower);
+    transform( str2.begin(), str2.end(), str2.begin(), ::tolower);
+    return (str1 < str2);
+}
 
 /*this function takes in a directory and outputs its contents*/
 
@@ -161,6 +167,8 @@ int main(int argc, char**argv){
         if(is_ls) ;
 
         files_dirs = getFiles_Dirs(argv); //get directories or files
+        sort(files_dirs.begin(), files_dirs.end(), compareTwo_);
+        printVec(files_dirs);
 
         //where there any directories or files that were called?
         if( !(files_dirs.size() > 0) ){
@@ -187,8 +195,14 @@ int main(int argc, char**argv){
                 }
             }
 
+            //sort the files within directory
             sort(contents.begin(), contents.end(), compareTwo);
+
+            //print the files to standard out
             printVec(contents);
+        }
+        else{
+            ;
         }
     }
     else{ //is there a ls with flags and maybe files or dir
