@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -72,7 +73,48 @@ vector<string> getFiles_Dirs (char **argv){
 }
 
 
+/*Comparision function for two char* */
 
+
+bool compareTwo(const char* s1, const char* s2){
+    return strcasecmp(s1, s2) < 0;
+}
+
+
+
+/*this function takes in a directory and outputs its contents*/
+
+/*string magic = directory */
+
+vector<char*> open_direct(string magic){
+    const char* magic_2 = magic.c_str(); //need to do some more magic
+    vector<char*> filenames; //to store the filenames so we can sort
+
+    DIR *dirp;
+    if(NULL == (dirp = opendir(magic_2))){
+        perror("There was an error with opendir(). ");
+        exit(1);
+    }
+    struct dirent *filespecs;
+    errno = 0;
+    while(NULL != (filespecs = readdir(dirp))){
+        filenames.push_back(filespecs->d_name);
+        //cout << filespecs->d_name << " ";
+    }
+
+    if(errno != 0){
+        perror("There was an error with readdir(). ");
+        exit(1);
+    }
+    cout << endl;
+    if(-1 == closedir(dirp)){
+        perror("There was an error with closedir(). ");
+        exit(1);
+    }
+
+
+    return filenames;
+}
 
 int main(int argc, char**argv){
 
@@ -104,7 +146,7 @@ int main(int argc, char**argv){
 //  --------------------------------------------------------------------
 
     //What's in char **argv?
-    printARGV(argv);
+    //printARGV(argv);
 //  --------------------------------------------------------------------
 
     /*if you type anything other than ls or ls with flags,
@@ -116,13 +158,37 @@ int main(int argc, char**argv){
     /*below are some cases for ls*/
     else if(argc > 1  && argv[1] == ls){ //is there a ls?
         is_ls = true;
-        if(is_ls) cout << "run ls depending on the size of dir vector" << endl;
+        if(is_ls) ;
 
         files_dirs = getFiles_Dirs(argv); //get directories or files
 
         //where there any directories or files that were called?
         if( !(files_dirs.size() > 0) ){
-            //call ls on the current working directory
+            /*call ls on the current working directory*/
+
+            //get the current working directory
+            char buf[1024];
+            if(!getcwd(buf,1024)){
+                perror("problem with getcwd");
+            }
+            string cwd(buf); //convert cstring to string for function
+
+            //get the vector of the contents in the current directory
+            vector<char*> contents = open_direct(cwd);
+
+            /*remove any hidden files (files that begin with a '.')*/
+            char dot = '.';
+            unsigned int totalsize = contents.size();
+            for(unsigned int i = 0; i < totalsize; ++i){
+                if(*(contents.at(i)) == dot){
+                    contents.erase(contents.begin() + i); //remove that file
+                    totalsize--; //after you erase you -1 from size
+                    i = 0; //after you -1 from size, you reset i
+                }
+            }
+
+            sort(contents.begin(), contents.end(), compareTwo);
+            printVec(contents);
         }
     }
     else{ //is there a ls with flags and maybe files or dir
