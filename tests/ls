@@ -1,0 +1,40 @@
+Script started on Fri 01 May 2015 09:07:49 PM PDT
+]0;stavan@stavan-X205TA: ~/Documents/rshell/testsstavan@stavan-X205TA:~/Documents/rshell/tests$ ls
+exec  ls
+]0;stavan@stavan-X205TA: ~/Documents/rshell/testsstavan@stavan-X205TA:~/Documents/rshell/tests$ cd ..
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ ls
+[0m[01;34mbin[0m  LICENSE  Makefile  README.md  [01;34msrc[0m  [01;34mtests[0m
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ make ls
+if [ ! -d bin ]; then mkdir bin; fi
+g++ -g --std=c++11 -Wall -Werror -ansi -pedantic src/ls.cpp -o bin/ls
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ /[Kbin/ls ls
+
+bin LICENSE Makefile README.md src tests 
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ ls -a[K[K[K[K[Kbin/ls ls[2Pmake[C[C[C[2@bin/ls[C[C[C -a
+
+bin LICENSE Makefile README.md src tests 
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/ls ls -a[K -a[K[Ksrc
+src 
+
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  vector::_M_range_check: __n (which is 2) >= this->size() (which is 1)
+Aborted (core dumped)
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/ls ls src[K[K[K-l
+
+bin LICENSE Makefile README.md src tests 
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/ls ls -l[KR
+
+bin LICENSE Makefile README.md src tests 
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/ls ls -R[Kalr[KR
+
+bin LICENSE Makefile README.md src tests 
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/ls ls -alR src
+src 
+
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  vector::_M_range_check: __n (which is 2) >= this->size() (which is 1)
+Aborted (core dumped)
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ exit
+exit
+
+Script done on Fri 01 May 2015 09:11:30 PM PDT
