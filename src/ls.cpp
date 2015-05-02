@@ -94,7 +94,7 @@ bool compareTwo_(string a, string b){
 
 vector<char*> open_direct(string magic){
     //const char* magic_2 = magic.c_str(); //need to do some more magic
-    char* magic_2 = getenv(magic.c_str());
+    const char* magic_2 = magic.c_str();
     vector<char*> filenames; //to store the filenames so we can sort
 
     DIR *dirp;
