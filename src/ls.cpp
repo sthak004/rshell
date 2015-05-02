@@ -93,7 +93,8 @@ bool compareTwo_(string a, string b){
 /*string magic = directory */
 
 vector<char*> open_direct(string magic){
-    const char* magic_2 = magic.c_str(); //need to do some more magic
+    //const char* magic_2 = magic.c_str(); //need to do some more magic
+    char* magic_2 = getenv(magic.c_str());
     vector<char*> filenames; //to store the filenames so we can sort
 
     DIR *dirp;
@@ -127,7 +128,7 @@ void ls_multiple(vector<string> &file_dir){
         unsigned int j;
 
         //CHECK THIS STATEMENT!!!
-        vector<char*> contents_ = open_direct((file_dir.at(i)));
+        vector<char*> contents_ = open_direct(file_dir.at(i));
 
         /*remove any hidden files (files that begin with a '.')*/
         char dot = '.';
@@ -213,7 +214,7 @@ int main(int argc, char**argv){
             string cwd(buf); //convert cstring to string for function
 
             //get the vector of the contents in the current directory
-            vector<char*> contents = open_direct(cwd);
+            vector<char*> contents = open_direct(cwd.c_str());
 
             /*remove any hidden files (files that begin with a '.')*/
             char dot = '.';
@@ -233,7 +234,7 @@ int main(int argc, char**argv){
             printVec(contents);
         }
         else{
-            files_dirs = getFiles_Dirs(argv);
+            printVec(files_dirs);
             ls_multiple(files_dirs);
         }
     }
