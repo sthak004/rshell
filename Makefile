@@ -9,5 +9,9 @@ rshell:
 ls:
 	if [ ! -d bin ]; then mkdir bin; fi
 	g++ -g $(STD) $(FLAGS) src/ls.cpp -o bin/ls
+pipe:
+	if [ ! -d bin ]; then mkdir bin; fi
+	g++ -g $(STD) $(FLAGS) src/pipe.cpp -o bin/pipe
+
 clean:
 	rm -rf bin
