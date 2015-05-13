@@ -79,7 +79,7 @@ void inputRedirection(char* command, char* file, char **argv){
         exit(1);
     }
     else if(pid == 0){ //child process = good *thumbs up*
-        /* flush standard out so that, if the forked child writes to standard
+        /* flush standard in so that, if the forked child writes to standard
          * error because of a problem, there will be no extraneous duplicated
          * output.*/
         fflush(STDIN_FILENO);
@@ -113,12 +113,65 @@ void inputRedirection(char* command, char* file, char **argv){
     return;
 }
 
-/* function5: perform logic - IO/pipe */
+
+/* function5: performs input redirection */
+/* parmeter1: file you want to open*/
+/* parmeter2: command you want to run*/
+/* parmeter3: list of all arguments (needed for execvp) */
+
+void outputRedirection(char* command, char* file, char** argv){
+    /* pid gets the value of fork*/
+    int pid = fork();
+
+    /* based on the value of fork, perform the following operations */
+    if(pid == -1){ //fork straight up failed you...
+        perror("fork() failed");
+        exit(1);
+    }
+    else if(pid == 0){ //child process = good *thumbs up*
+        /* flush standard out so that, if the forked child writes to standard
+         * error because of a problem, there will be no extraneous duplicated
+         * output.*/
+        fflush(stdout);
+
+        /* open the file passed in */
+        int fd1 = open(file, O_WRONLY | O_TRUNC | O_CREAT, S_IRGRP | S_IWGRP
+                                       | S_IWUSR);
+        if(fd1 == -1){
+            perror(file);
+            exit(1);
+        }
+
+        /* duplicate the file descriptor */
+        /* use STDIN_FILENO as standard input*/
+        dup2(fd1, STDOUT_FILENO);
+
+        /* close the file descriptor*/
+        close(fd1);
+
+
+        /* run the command passed in */
+        if( execvp(command, argv) == -1){
+            perror("error running execvp");
+            exit(1);
+        }
+    }
+    else if(pid > 0){ //we have to wait for the child process to die
+        if ( -1 == wait(0)){
+            perror("there was an error with wait");
+        }
+    }
+    return;
+}
+
+
+
+/* function6: perform logic - IO/pipe */
 void logic(vector<char*> &parts, char **argv){
     /* loop through vector and determine each case */
     for(unsigned int i = 0; i < parts.size(); i++){
         if(*(parts.at(i)) == '<'){
-            /* check is ' < ' is not the first or last token*/
+            /* check if ' < ' is not the first or last token */
             if(i > 0 && i < parts.size() - 1){
                 /* 1.perform input redirection assuming "i" is in a
                  * position*/
@@ -129,6 +182,20 @@ void logic(vector<char*> &parts, char **argv){
                 /* 3.you pass in parts.at(i+1) because you getting information
                  * from the file AFTER the ' < ' sign */
                 inputRedirection(parts.at(i-1), parts.at(i+1), argv);
+            }
+        }
+        else if(*(parts.at(i)) == '>'){
+            /* check if ' > ' is not the first or last token */
+            if(i > 0 && i < parts.size() - 1){
+                /* 1.perform ouput redirection assuming "i" is in an
+                 * appopriate position*/
+
+                /* 2.you pass in parts.at(i-1) because that SHOULD
+                 * be the command/file preceding the ' > ' sign*/
+
+                /* 3.you pass in parts.at(i+1) because you getting information
+                 * from the file AFTER the ' > ' sign */
+                outputRedirection(parts.at(i-1), parts.at(i+1), argv);
             }
         }
     }
