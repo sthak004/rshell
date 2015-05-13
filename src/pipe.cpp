@@ -166,7 +166,44 @@ void outputRedirection(char* command, char* file, char** argv){
 
 
 
-/* function6: perform logic - IO/pipe */
+/* function6: extracts connectors */
+/* this function extracts the connectors and stores them in one vector
+ * and the rest of the files and/or commands into another vector*/
+/* parameter1: the vector of ALL the words and connectors
+ * parameter2: the vectors of words we will extract from the first parameter*/
+vector<char*> extractConnectors(vector<char*> &commands, vector<char*> &words){
+    /* create a vector for connectors*/
+    vector<char*> connectors;
+
+    /* loop through the commands vectors and push back all connectors onto
+     * the connectors vector */
+    for(unsigned int i = 0; i < commands.size(); i++){
+        /* if you find a '<' push it onto connectors vector*/
+        if(*(commands.at(i)) == '<'){
+            connectors.push_back(commands.at(i));
+        }
+        /* if you find a '>' push it onto the connectors vector*/
+        else if(*(commands.at(i)) == '>'){
+            connectors.push_back(commands.at(i));
+        }
+        /* if you find a '|' push it onto the connectors vector*/
+        else if(*(commands.at(i)) == '|'){
+            connectors.push_back(commands.at(i));
+        }
+        /* if you fail to find any of the connectors above, then push the file
+         * or command onto the words vector*/
+        else{
+            words.push_back(commands.at(i));
+        }
+    }
+
+
+    return connectors;
+}
+
+
+
+/* function7: perform logic - IO/pipe */
 void logic(vector<char*> &parts, char **argv){
     /* loop through vector and determine each case */
     for(unsigned int i = 0; i < parts.size(); i++){
@@ -203,7 +240,6 @@ void logic(vector<char*> &parts, char **argv){
 }
 
 
-/* function5: input redirection */
 
 int main(int argc, char** argv){
     /* user input */
@@ -212,11 +248,21 @@ int main(int argc, char** argv){
     /* get user input */
     getline(cin, input);
 
+
     /* extract components */
     vector<char*> components;
     components = getParts(input);
 
+    /* 1. separate connectors from files and/or commands */
+    /* 2. create a vector for the files and/or commands to parse through*/
+    vector<char*> words;
+    /* 3. create a connectors vector that the extractConnects should return */
+    vector<char*> connectors;
+
+    /* call extractconnectors command to retrieve all the connectors*/
+    connectors = extractConnectors(components, words);
+
     /*perform appropriate logic*/
-    logic(components, argv);
+    //logic(components, argv);
     return 0;
 }
