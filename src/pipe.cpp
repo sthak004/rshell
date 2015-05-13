@@ -114,7 +114,7 @@ void inputRedirection(char* command, char* file, char **argv){
 }
 
 
-/* function5: performs input redirection */
+/* function5: performs output redirection */
 /* parmeter1: file you want to open*/
 /* parmeter2: command you want to run*/
 /* parmeter3: list of all arguments (needed for execvp) */
@@ -143,7 +143,7 @@ void outputRedirection(char* command, char* file, char** argv){
         }
 
         /* duplicate the file descriptor */
-        /* use STDIN_FILENO as standard input*/
+        /* use STDOUT_FILENO as standard input*/
         dup2(fd1, STDOUT_FILENO);
 
         /* close the file descriptor*/
