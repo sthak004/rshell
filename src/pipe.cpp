@@ -113,15 +113,13 @@ void inputRedirection(char* command, char* file, char **argv){
     return;
 }
 
-
-
 /* function5: perform logic - IO/pipe */
 void logic(vector<char*> &parts, char **argv){
     /* loop through vector and determine each case */
     for(unsigned int i = 0; i < parts.size(); i++){
         if(*(parts.at(i)) == '<'){
             /* check is ' < ' is not the first or last token*/
-            if(i > 0 || i < parts.size() - 1){
+            if(i > 0 && i < parts.size() - 1){
                 /* 1.perform input redirection assuming "i" is in a
                  * position*/
 
