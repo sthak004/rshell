@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,7 +48,7 @@ vector<char*> getParts(string &wut){
     /*extract until end of line*/
     while(token != NULL){
         /* output each token */
-        cout << "token" << pos << ": " << token << endl;
+        //cout << "token" << pos << ": " << token << endl;
 
         /* push each token onto vector */
         brokenParts.push_back(token);
@@ -81,7 +82,28 @@ void inputRedirection(char* command, char* file, char **argv){
         /* flush standard out so that, if the forked child writes to standard
          * error because of a problem, there will be no extraneous duplicated
          * output.*/
-        fflush(0);
+        fflush(STDIN_FILENO);
+
+        /* open the file passed in */
+        int fd0 = open(file, O_RDONLY);
+        if(fd0 == -1){
+            perror(file);
+            exit(1);
+        }
+
+        /* duplicate the file descriptor */
+        /* use STDIN_FILENO as standard input*/
+        dup2(fd0, STDIN_FILENO);
+
+        /* close the file descriptor*/
+        close(fd0);
+
+
+        /* run the command passed in */
+        if( execvp(command, argv) == -1){
+            perror("error running execvp");
+            exit(1);
+        }
     }
     else if(pid > 0){ //we have to wait for the child process to die
         if ( -1 == wait(0)){
