@@ -1,5 +1,10 @@
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 #include <vector>
 
 using namespace std;
@@ -59,7 +64,59 @@ vector<char*> getParts(string &wut){
 }
 
 
-/* function4: parse user input */
+/* function4: performs input redirection */
+/* parmeter1: file you want to open*/
+/* parmeter2: command you want to run*/
+/* parmeter3: list of all arguments (needed for execvp) */
+void inputRedirection(char* command, char* file, char **argv){
+    /* pid gets the value of fork*/
+    int pid = fork();
+
+    /* based on the value of fork, perform the following operations */
+    if(pid == -1){ //fork straight up failed you...
+        perror("fork() failed");
+        exit(1);
+    }
+    else if(pid == 0){ //child process = good *thumbs up*
+        /* flush standard out so that, if the forked child writes to standard
+         * error because of a problem, there will be no extraneous duplicated
+         * output.*/
+        fflush(0);
+    }
+    else if(pid > 0){ //we have to wait for the child process to die
+        if ( -1 == wait(0)){
+            perror("there was an error with wait");
+        }
+    }
+    return;
+}
+
+
+
+/* function5: perform logic - IO/pipe */
+void logic(vector<char*> &parts, char **argv){
+    /* loop through vector and determine each case */
+    for(unsigned int i = 0; i < parts.size(); i++){
+        if(*(parts.at(i)) == '<'){
+            /* check is ' < ' is not the first or last token*/
+            if(i > 0 || i < parts.size() - 1){
+                /* 1.perform input redirection assuming "i" is in a
+                 * position*/
+
+                /* 2.you pass in parts.at(i-1) because that SHOULD
+                 * be the command preceding the ' < ' sign*/
+
+                /* 3.you pass in parts.at(i+1) because you getting information
+                 * from the file AFTER the ' < ' sign */
+                inputRedirection(parts.at(i-1), parts.at(i+1), argv);
+            }
+        }
+    }
+    return;
+}
+
+
+/* function5: input redirection */
 
 int main(int argc, char** argv){
     /* user input */
@@ -69,9 +126,10 @@ int main(int argc, char** argv){
     getline(cin, input);
 
     /* extract components */
-    vector<char*> onepieceatatime;
-    onepieceatatime = getParts(input);
+    vector<char*> components;
+    components = getParts(input);
 
-    printVec(onepieceatatime);
+    /*perform appropriate logic*/
+    logic(components, argv);
     return 0;
 }
