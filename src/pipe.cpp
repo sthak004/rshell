@@ -10,6 +10,10 @@
 
 using namespace std;
 
+/* BUGS:
+ * 1. out of range error when ending with a connector '<' or '>' */
+
+
 //ONCE YOU ARE DONE, MERGE THIS FILE WITH RSHELL AND DELETE TARGET IN MAKEFILE
 
 /* function1: prints out any type */
@@ -66,10 +70,22 @@ vector<char*> getParts(string &wut){
 
 
 /* function4: performs input redirection */
-/* parmeter1: file you want to open*/
-/* parmeter2: command you want to run*/
+/* parmeter1: command that you will run on the files*/
+/* parmeter2: the vector of files to open and redirect io on */
 /* parmeter3: list of all arguments (needed for execvp) */
-void inputRedirection(char* command, char* file, char **argv){
+void inputRedirection(char* command, vector<char*> files, char **argv){
+    fflush(STDIN_FILENO);
+
+    /*open up all the files in the vector of files */
+    for(unsigned int i = 0; i < files.size(); i++){
+        int fd0 = open(files.at(i), O_RDONLY);
+        if(fd0 == -1){
+            perror(files.at(i));
+            exit(1);
+        }
+        dup2(fd0, STDIN_FILENO);
+        close(fd0);
+    }
     /* pid gets the value of fork*/
     int pid = fork();
 
@@ -82,21 +98,21 @@ void inputRedirection(char* command, char* file, char **argv){
         /* flush standard in so that, if the forked child writes to standard
          * error because of a problem, there will be no extraneous duplicated
          * output.*/
-        fflush(STDIN_FILENO);
+        //fflush(STDIN_FILENO);
 
         /* open the file passed in */
-        int fd0 = open(file, O_RDONLY);
+        /*int fd0 = open(file, O_RDONLY);
         if(fd0 == -1){
             perror(file);
             exit(1);
-        }
+        }*/
 
         /* duplicate the file descriptor */
         /* use STDIN_FILENO as standard input*/
-        dup2(fd0, STDIN_FILENO);
+        //dup2(fd0, STDIN_FILENO);
 
         /* close the file descriptor*/
-        close(fd0);
+        //close(fd0);
 
 
         /* run the command passed in */
@@ -119,7 +135,23 @@ void inputRedirection(char* command, char* file, char **argv){
 /* parmeter2: command you want to run*/
 /* parmeter3: list of all arguments (needed for execvp) */
 
-void outputRedirection(char* command, char* file, char** argv){
+void outputRedirection(char* command, vector<char*> files, char** argv){
+    fflush(stdout);
+
+     /*open up all the files in the vector of files */
+    for(unsigned int i = 0; i < files.size(); i++){
+        int fd1 = open(files.at(i), O_WRONLY | O_TRUNC | O_CREAT,
+                                    S_IRGRP | S_IWGRP | S_IWUSR);
+
+        if(fd1 == -1){
+            perror(files.at(i));
+            exit(1);
+        }
+        dup2(fd1, STDOUT_FILENO);
+        close(fd1);
+    }
+
+
     /* pid gets the value of fork*/
     int pid = fork();
 
@@ -132,22 +164,22 @@ void outputRedirection(char* command, char* file, char** argv){
         /* flush standard out so that, if the forked child writes to standard
          * error because of a problem, there will be no extraneous duplicated
          * output.*/
-        fflush(stdout);
+        //fflush(stdout);
 
         /* open the file passed in */
-        int fd1 = open(file, O_WRONLY | O_TRUNC | O_CREAT, S_IRGRP | S_IWGRP
+        /*int fd1 = open(file, O_WRONLY | O_TRUNC | O_CREAT, S_IRGRP | S_IWGRP
                                        | S_IWUSR);
         if(fd1 == -1){
             perror(file);
             exit(1);
-        }
+        }*/
 
         /* duplicate the file descriptor */
         /* use STDOUT_FILENO as standard input*/
-        dup2(fd1, STDOUT_FILENO);
+        //dup2(fd1, STDOUT_FILENO);
 
         /* close the file descriptor*/
-        close(fd1);
+        //close(fd1);
 
 
         /* run the command passed in */
@@ -204,38 +236,75 @@ vector<char*> extractConnectors(vector<char*> &commands, vector<char*> &words){
 
 
 /* function7: perform logic - IO/pipe */
-void logic(vector<char*> &parts, char **argv){
-    /* loop through vector and determine each case */
-    for(unsigned int i = 0; i < parts.size(); i++){
-        if(*(parts.at(i)) == '<'){
-            /* check if ' < ' is not the first or last token */
-            if(i > 0 && i < parts.size() - 1){
-                /* 1.perform input redirection assuming "i" is in a
-                 * position*/
+void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
+    /* we assume that the first input is a command and the rest of the
+     * componenets in the vector will be files that are either created
+     * or will be created */
+    char* command = words.at(0);
 
-                /* 2.you pass in parts.at(i-1) because that SHOULD
-                 * be the command preceding the ' < ' sign*/
+    /* erase the first element in the vector<char*> words as it is the
+     * command and we should not parse through that */
+    words.erase(words.begin());
 
-                /* 3.you pass in parts.at(i+1) because you getting information
-                 * from the file AFTER the ' < ' sign */
-                inputRedirection(parts.at(i-1), parts.at(i+1), argv);
-            }
+    /* 1. if there is only connector then only execute inputRedirection
+     * once*/
+    if(connectors.size() == 1 && *(connectors.at(0)) == '<'){
+        inputRedirection(command, words, argv);
+        return;
+    }
+    /* if the vector contain's all '<' signs, then only call
+     * inputRedirection once. */
+    /* in other words, if you ever see a '>' or '|' sign then stop*/
+    else if(connectors.size() > 1 && *(connectors.at(0)) == '<'){
+        for(unsigned int i = 0; i < connectors.size(); i++){
+           if(*(connectors.at(i)) == '>' || *(connectors.at(i)) == '|'){
+               //specialcase();
+               return;
+           }
         }
-        else if(*(parts.at(i)) == '>'){
-            /* check if ' > ' is not the first or last token */
-            if(i > 0 && i < parts.size() - 1){
-                /* 1.perform ouput redirection assuming "i" is in an
-                 * appopriate position*/
+        /* the vector contains all '<' sign so call inputRedirection once!*/
+        inputRedirection(command, words, argv);
+    }
+    /* if there is only one '>' connector, then only execute
+     * outputRedirection once*/
+    else if(connectors.size() == 1 && *(connectors.at(0)) == '>'){
+        outputRedirection(command, words, argv);
+        return;
+    }
+    /* if the vector contain's all '>' signs, then only call
+     * outputRedirection once. */
+    else if(connectors.size() > 1 && *(connectors.at(0)) == '>'){
+        for(unsigned int i = 0; i < connectors.size(); i++){
+           if(*(connectors.at(i)) == '<' || *(connectors.at(i)) == '|'){
+               //specialcase();
+               return;
+           }
 
-                /* 2.you pass in parts.at(i-1) because that SHOULD
-                 * be the command/file preceding the ' > ' sign*/
-
-                /* 3.you pass in parts.at(i+1) because you getting information
-                 * from the file AFTER the ' > ' sign */
-                outputRedirection(parts.at(i-1), parts.at(i+1), argv);
-            }
+           /* the vector contains all '>' signs so call outputRedirection
+            * once! */
+           outputRedirection(command, words, argv);
         }
     }
+    /* 2. else loop through vector and execute connectors accordingly */
+    /*for(unsigned int i = 0; i < connectors.size(); i++){
+        if(*(connectors.at(i)) == '<'){*/
+            /* 1. Determine what the first connector is. */
+            /* 2. Grab the corresponding command and file associated */
+            /* 3. parameter1: command = the first word a.k.a the
+             *    to call execvp on */
+            /* 4  parameter2: the vector of files to open */
+            /* 5. parameter3: argv is needed for execvp */
+            //inputRedirection(command, words, argv);
+        /*}
+        else if(*(connectors.at(i)) == '>'){*/
+            /* 1. Determine what the first connector is. */
+            /* 2. Grab the corresponding command and file associated */
+            /* 3. parameter1: words.at(i) = command */
+            /* 4  parameter2: words.at(i+1) = file */
+            /* 5. parameter3: argv is needed for execvp */
+            /*outputRedirection(words.at(i), words.at(i+1), argv);
+        }
+    }*/
     return;
 }
 
@@ -263,6 +332,6 @@ int main(int argc, char** argv){
     connectors = extractConnectors(components, words);
 
     /*perform appropriate logic*/
-    //logic(components, argv);
+    logic(connectors, words, argv);
     return 0;
 }
