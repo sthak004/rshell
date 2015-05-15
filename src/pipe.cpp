@@ -71,9 +71,12 @@ vector<char*> getParts(string &wut){
 
 /* function4: performs input redirection */
 /* parmeter1: command that you will run on the files*/
-/* parmeter2: the vector of files to open and redirect io on */
+/* parmeter2: the vector of files to open and redirect input on */
 /* parmeter3: list of all arguments (needed for execvp) */
 void inputRedirection(char* command, vector<char*> files, char **argv){
+    /* flush standard in so that, if the forked child writes to standard
+     * error because of a problem, there will be no extraneous duplicated
+     * output.*/
     fflush(STDIN_FILENO);
 
     /*open up all the files in the vector of files */
@@ -83,9 +86,14 @@ void inputRedirection(char* command, vector<char*> files, char **argv){
             perror(files.at(i));
             exit(1);
         }
+        /* duplicate the file descriptor */
         dup2(fd0, STDIN_FILENO);
+
+        /* close the file descriptor */
         close(fd0);
     }
+
+
     /* pid gets the value of fork*/
     int pid = fork();
 
@@ -95,26 +103,6 @@ void inputRedirection(char* command, vector<char*> files, char **argv){
         exit(1);
     }
     else if(pid == 0){ //child process = good *thumbs up*
-        /* flush standard in so that, if the forked child writes to standard
-         * error because of a problem, there will be no extraneous duplicated
-         * output.*/
-        //fflush(STDIN_FILENO);
-
-        /* open the file passed in */
-        /*int fd0 = open(file, O_RDONLY);
-        if(fd0 == -1){
-            perror(file);
-            exit(1);
-        }*/
-
-        /* duplicate the file descriptor */
-        /* use STDIN_FILENO as standard input*/
-        //dup2(fd0, STDIN_FILENO);
-
-        /* close the file descriptor*/
-        //close(fd0);
-
-
         /* run the command passed in */
         if( execvp(command, argv) == -1){
             perror("error running execvp");
@@ -129,13 +117,15 @@ void inputRedirection(char* command, vector<char*> files, char **argv){
     return;
 }
 
-
 /* function5: performs output redirection */
-/* parmeter1: file you want to open*/
-/* parmeter2: command you want to run*/
+/* parmeter1: command that you will run on the files*/
+/* parmeter2: the vector of files to open and redirect output on */
 /* parmeter3: list of all arguments (needed for execvp) */
 
 void outputRedirection(char* command, vector<char*> files, char** argv){
+    /* flush standard out so that, if the forked child writes to standard
+     * error because of a problem, there will be no extraneous duplicated
+     * output.*/
     fflush(stdout);
 
      /*open up all the files in the vector of files */
@@ -147,7 +137,11 @@ void outputRedirection(char* command, vector<char*> files, char** argv){
             perror(files.at(i));
             exit(1);
         }
+
+        /* duplicate file descriptor */
         dup2(fd1, STDOUT_FILENO);
+
+        /* close the file descriptor */
         close(fd1);
     }
 
@@ -161,27 +155,6 @@ void outputRedirection(char* command, vector<char*> files, char** argv){
         exit(1);
     }
     else if(pid == 0){ //child process = good *thumbs up*
-        /* flush standard out so that, if the forked child writes to standard
-         * error because of a problem, there will be no extraneous duplicated
-         * output.*/
-        //fflush(stdout);
-
-        /* open the file passed in */
-        /*int fd1 = open(file, O_WRONLY | O_TRUNC | O_CREAT, S_IRGRP | S_IWGRP
-                                       | S_IWUSR);
-        if(fd1 == -1){
-            perror(file);
-            exit(1);
-        }*/
-
-        /* duplicate the file descriptor */
-        /* use STDOUT_FILENO as standard input*/
-        //dup2(fd1, STDOUT_FILENO);
-
-        /* close the file descriptor*/
-        //close(fd1);
-
-
         /* run the command passed in */
         if( execvp(command, argv) == -1){
             perror("error running execvp");
@@ -196,9 +169,76 @@ void outputRedirection(char* command, vector<char*> files, char** argv){
     return;
 }
 
+/* function6: in_out_redirection */
+/* this function perform input and output redirection together
+ * if '<' and '>' are spotted on the same line */
+/* parmeter1: command that you will run on the files*/
+/* parmeter2: the vector of files to open and redirect output on */
+/* parmeter3: list of all arguments (needed for execvp) */
+
+void in_out_redirection(char* command, vector<char*> files,
+                        vector<char*> connectors, char** argv){
+    /* flush both STDIN and STDOUT */
+    fflush(STDIN_FILENO);
+    fflush(stdout);
+    vector<char*> infiles;
+    vector<char*> outfiles;
+    for(unsigned int i = 0; i < files.size(); i++){
+        if(*(connectors.at(i)) == '<'){
+            infiles.push_back(files.at(i));
+        }
+        else if(*(connectors.at(i)) == '>'){
+            outfiles.push_back(files.at(i));
+        }
+    }
+
+    for(unsigned int x = 0; x < infiles.size(); x++){
+        int in = open(infiles.at(x), O_RDONLY);
+        if(in == -1){
+            perror("open");
+            exit(1);
+        }
+        dup2(in, STDIN_FILENO);
+        close(in);
+    }
+
+    for(unsigned int z = 0; z < outfiles.size(); z++){
+        int out = open(outfiles.at(z), O_WRONLY | O_TRUNC | O_CREAT,
+                                      S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+        if(out == -1){
+            perror("open");
+            exit(1);
+        }
+        dup2(out, STDOUT_FILENO);
+        close(out);
+    }
 
 
-/* function6: extracts connectors */
+    /* pid gets the value of fork*/
+    int pid = fork();
+
+    /* based on the value of fork, perform the following operations */
+    if(pid == -1){ //fork straight up failed you...
+        perror("fork() failed");
+        exit(1);
+    }
+    else if(pid == 0){ //child process = good *thumbs up*
+        /* run the command passed in */
+        if( execvp(command, argv) == -1){
+            perror("error running execvp");
+            exit(1);
+        }
+    }
+    else if(pid > 0){ //we have to wait for the child process to die
+        if ( -1 == wait(0)){
+            perror("there was an error with wait");
+        }
+    }
+
+    return;
+}
+
+/* function7: extracts connectors */
 /* this function extracts the connectors and stores them in one vector
  * and the rest of the files and/or commands into another vector*/
 /* parameter1: the vector of ALL the words and connectors
@@ -235,7 +275,7 @@ vector<char*> extractConnectors(vector<char*> &commands, vector<char*> &words){
 
 
 
-/* function7: perform logic - IO/pipe */
+/* function8: perform logic - IO/pipe */
 void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
     /* we assume that the first input is a command and the rest of the
      * componenets in the vector will be files that are either created
@@ -258,7 +298,7 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
     else if(connectors.size() > 1 && *(connectors.at(0)) == '<'){
         for(unsigned int i = 0; i < connectors.size(); i++){
            if(*(connectors.at(i)) == '>' || *(connectors.at(i)) == '|'){
-               //specialcase();
+               in_out_redirection(command, words, connectors, argv);
                return;
            }
         }
@@ -285,26 +325,6 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
            outputRedirection(command, words, argv);
         }
     }
-    /* 2. else loop through vector and execute connectors accordingly */
-    /*for(unsigned int i = 0; i < connectors.size(); i++){
-        if(*(connectors.at(i)) == '<'){*/
-            /* 1. Determine what the first connector is. */
-            /* 2. Grab the corresponding command and file associated */
-            /* 3. parameter1: command = the first word a.k.a the
-             *    to call execvp on */
-            /* 4  parameter2: the vector of files to open */
-            /* 5. parameter3: argv is needed for execvp */
-            //inputRedirection(command, words, argv);
-        /*}
-        else if(*(connectors.at(i)) == '>'){*/
-            /* 1. Determine what the first connector is. */
-            /* 2. Grab the corresponding command and file associated */
-            /* 3. parameter1: words.at(i) = command */
-            /* 4  parameter2: words.at(i+1) = file */
-            /* 5. parameter3: argv is needed for execvp */
-            /*outputRedirection(words.at(i), words.at(i+1), argv);
-        }
-    }*/
     return;
 }
 
