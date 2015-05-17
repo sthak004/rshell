@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <fcntl.h>
 #include <stdio.h>
@@ -179,59 +180,79 @@ void outputRedirection(char* command, vector<char*> files, char** argv){
 /* parmeter3: list of all arguments (needed for execvp) */
 
 void in_out_redirection(char* command, vector<char*> files,
-                        vector<char*> connectors, char** argv, bool special){
+                        vector<char*> connectors, char** argv, bool special, bool s_o){
     /* flush both STDIN and STDOUT */
     //fflush(STDIN_FILENO);
     //fflush(stdout);
-    vector<char*> infiles;
-    vector<char*> outfiles;
+    if(s_o){
+        /* if you have the <<< operator, then you know that the second and ONLY
+         * parameter is a c-string and thus you must print it to standard out */
+        string c_string;
+        for(unsigned int i = 0; i < files.size(); i++){
+            c_string += files.at(i);
+            c_string += ' ';
+        }
 
-    for(unsigned int i = 0; i < files.size(); i++){
-        char* temp_connector = connectors.at(0);
-        unsigned int connector_length = sizeof(temp_connector);
+        /* however, you must remove the parenthesis first... */
+        c_string.erase(remove(c_string.begin(), c_string.end(), '\"'), c_string.end());
 
-        if(*(connectors.at(i)) == '<'){
-            infiles.push_back(files.at(i));
-        }
-        else if(connector_length > 1 && temp_connector[0] == '>'
-                                     && temp_connector[1] == '>'){
-            outfiles.push_back(files.at(i));
-        }
-        else if(*(connectors.at(i)) == '>'){
-            outfiles.push_back(files.at(i));
-        }
-    }
-
-    for(unsigned int x = 0; x < infiles.size(); x++){
-        int in = open(infiles.at(x), O_RDONLY);
-        if(in == -1){
-            perror("open");
-            exit(1);
-        }
-        dup2(in, STDIN_FILENO);
-        close(in);
-    }
-
-    if(special == true){
-        for(unsigned int z = 0; z < outfiles.size(); z++){
-            int out = open(outfiles.at(z), O_WRONLY | O_APPEND, 0644);
-            if(out == -1){
-                perror("open");
-                exit(1);
-            }
-            dup2(out, STDOUT_FILENO);
-            close(out);
-        }
+        cout << c_string << endl;
+        return;
     }
     else{
-        for(unsigned int z = 0; z < outfiles.size(); z++){
-            int out = open(outfiles.at(z), O_RDWR | O_CREAT | O_APPEND, 0644);
-            if(out == -1){
+        vector<char*> infiles;
+        vector<char*> outfiles;
+
+        for(unsigned int i = 0; i < files.size(); i++){
+            string temp_connector;
+            temp_connector.assign(connectors.at(i));
+
+            /* need the length to differentiate between a '>' and ">>" */
+            unsigned int connector_length = temp_connector.size();
+
+            if(*(connectors.at(i)) == '<'){
+                infiles.push_back(files.at(i));
+            }
+            else if(connector_length == 2 && temp_connector[0] == '>'
+                    && temp_connector[1] == '>'){
+                outfiles.push_back(files.at(i));
+            }
+            else if(*(connectors.at(i)) == '>'){
+                outfiles.push_back(files.at(i));
+            }
+        }
+
+        for(unsigned int x = 0; x < infiles.size(); x++){
+            int in = open(infiles.at(x), O_RDONLY);
+            if(in == -1){
                 perror("open");
                 exit(1);
             }
-            dup2(out, STDOUT_FILENO);
-            close(out);
+            dup2(in, STDIN_FILENO);
+            close(in);
+        }
+
+        if(special == true){
+            for(unsigned int z = 0; z < outfiles.size(); z++){
+                int out = open(outfiles.at(z), O_WRONLY | O_CREAT | O_APPEND, 0644);
+                if(out == -1){
+                    perror("open");
+                    exit(1);
+                }
+                dup2(out, STDOUT_FILENO);
+                close(out);
+            }
+        }
+        else{
+            for(unsigned int z = 0; z < outfiles.size(); z++){
+                int out = open(outfiles.at(z), O_RDWR | O_CREAT | O_APPEND, 0644);
+                if(out == -1){
+                    perror("open");
+                    exit(1);
+                }
+                dup2(out, STDOUT_FILENO);
+                close(out);
+            }
         }
     }
 
@@ -286,9 +307,14 @@ vector<char*> extractConnectors(vector<char*> &commands, vector<char*> &words){
         else if(connector_length == 1 && *(commands.at(i)) == '>'){
             connectors.push_back(commands.at(i));
         }
-        else if(connector_length > 1 && temp_connector[0] == '>' &&
-                                        temp_connector[1] == '>'){
+        else if(connector_length == 2 && temp_connector[0] == '>' &&
+                                         temp_connector[1] == '>'){
             //cout << "the special character exists" << endl;
+            connectors.push_back(commands.at(i));
+        }
+        else if(connector_length == 3 && temp_connector[0] == '<' &&
+                                         temp_connector[1] == '<' &&
+                                         temp_connector[2] == '<'){
             connectors.push_back(commands.at(i));
         }
         /* if you find a '|' push it onto the connectors vector*/
@@ -312,6 +338,9 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
     /* bool to signify it is a ">>" sign */
     bool appended = false;
 
+    /* bool for the "<<<" operator */
+    bool string_out = false;
+
     /* we assume that the first input is a command and the rest of the
      * componenets in the vector will be files that are either created
      * or will be created */
@@ -324,6 +353,18 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
     /* 1. if there is only connector then only execute inputRedirection
      * once*/
     if(connectors.size() == 1 && *(connectors.at(0)) == '<'){
+        string temp_connector;
+        temp_connector.assign(connectors.at(0));
+
+        unsigned int connector_length = temp_connector.size();
+
+        if(connector_length > 1 && temp_connector[0] == '<' && temp_connector[1] == '<'
+                                && temp_connector[2] == '<'){
+            /* the bool that signifies the ">>" connector */
+            string_out = true;
+            in_out_redirection(command, words, connectors, argv, appended, string_out);
+            return;
+        }
         inputRedirection(command, words, argv);
         return;
     }
@@ -333,7 +374,7 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
     else if(connectors.size() > 1 && *(connectors.at(0)) == '<'){
         for(unsigned int i = 0; i < connectors.size(); i++){
            if(*(connectors.at(i)) == '>' || *(connectors.at(i)) == '|'){
-               in_out_redirection(command, words, connectors, argv, appended);
+               in_out_redirection(command, words, connectors, argv, appended, string_out);
                return;
            }
         }
@@ -351,7 +392,7 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
         if(connector_length > 1 && temp_connector[0] == '>' && temp_connector[1] == '>'){
             /* the bool that signifies the ">>" connector */
             appended = true;
-            in_out_redirection(command, words, connectors, argv, appended);
+            in_out_redirection(command, words, connectors, argv, appended, string_out);
             return;
         }
         outputRedirection(command, words, argv);
@@ -366,11 +407,11 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
 
            unsigned int connector_length = temp_connector.size();
            if(connector_length > 1 && temp_connector[0] == '>' && temp_connector[1] == '>'){
-               in_out_redirection(command, words, connectors, argv, appended);
+               in_out_redirection(command, words, connectors, argv, appended, string_out);
                return;
            }
            if(*(connectors.at(i)) == '<' || *(connectors.at(i)) == '|'){
-               in_out_redirection(command, words, connectors, argv, appended);
+               in_out_redirection(command, words, connectors, argv, appended, string_out);
                return;
            }
 
