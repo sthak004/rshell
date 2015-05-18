@@ -1,0 +1,154 @@
+Script started on Sun 17 May 2015 11:01:35 PM PDT
+]0;stavan@stavan-X205TA: ~/Documents/rshell/testsstavan@stavan-X205TA:~/Documents/rshell/tests$ cd ..
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/p[Krshell 
+cat < LICENSE #simple input redirection
+The MIT License (MIT)
+
+Copyright (c) 2015 sthak004
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/rshell 
+cat < Makefile #another example
+FLAGS=-Wall -Werror -ansi -pedantic
+STD= --std=c++11
+
+all: rshell ls
+
+rshell:
+	if [ ! -d bin ]; then mkdir bin; fi
+	g++ -g $(STD) $(FLAGS) src/rshell.cpp -o bin/rshell
+ls:
+	if [ ! -d bin ]; then mkdir bin; fi
+	g++ -g $(STD) $(FLAGS) src/ls.cpp -o bin/ls
+pipe:
+	if [ ! -d bin ]; then mkdir bin; fi
+	g++ -g $(STD) $(FLAGS) src/pipe.cpp -o bin/pipe
+
+clean:
+	rm -rf bin
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/rshell 
+ls > sample #will be the contents                      output redirection on to be     a   file      file that will c be created called sample
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ c[Kls
+[0m[01;34mbin[0m            filetobesorted  Makefile   sample  [01;34mtests[0m
+exisitingfile  LICENSE         README.md  [01;34msrc[0m
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat sample 
+bin
+exisitingfile
+filetobesorted
+LICENSE
+Makefile
+README.md
+sample
+src
+tests
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat sample ls[Kbin/rshell 
+ls >> exisitingfile #will APPEN  END ls contents onto e exisiting file iwht    with stuff in it
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat [K[K[K[Kls
+[0m[01;34mbin[0m            filetobesorted  Makefile   sample  [01;34mtests[0m
+exisitingfile  LICENSE         README.md  [01;34msrc[0m
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat exisitingfile [K
+some stuff
+in here
+already
+bin
+exisitingfile
+filetobesorted
+LICENSE
+Makefile
+README.md
+sample
+src
+tests
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ ca[K[Kcat exisitingfilels[Kbin/rshell 
+cat < filetobesort  ed $ #fi  view      looks    at the the               file with unalphabetized characters
+d
+b
+c
+a
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/rshell cat exisitingfilels[Kbin/rshell cat sample[Cls[Kbin/rshell [6Pcd ..[1Pexitcat samplels[Kbin/rshell [6Pcd ..[1Pexit[2Plsbin/rshell [6Pcd ..[1Pexitcd ..bin/rshell 
+sort < filetobesorted > sortedfile #sorts the unsorted file and creates sortedfile                              ^[[A
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/rshell 
+sort < filetobesorted > sortedfile #sorts unsorted file and dumbs in sortedfile
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ c[Kls
+[0m[01;34mbin[0m            filetobesorted  Makefile   sample      [01;34msrc[0m
+exisitingfile  LICENSE         README.md  sortedfile  [01;34mtests[0m
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat <[K[K[K[K[Kcat s[K[K[K[K[Klsbin/rshell 
+cat < sortedfile
+a
+b
+c
+d
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ bin/rshell 
+ls > f1 > f1   2 > f3 $ #pass    creates f1, f2, f3 and passed s ls to f3
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ ls
+[0m[01;34mbin[0m            f1  f3              LICENSE   README.md  sortedfile  [01;34mtests[0m
+exisitingfile  f2  filetobesorted  Makefile  sample     [01;34msrc[0m
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat f1
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat f2
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat f3
+bin
+exisitingfile
+f1
+f2
+f3
+filetobesorted
+LICENSE
+Makefile
+README.md
+sample
+sortedfile
+src
+tests
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat f321[4Plsbin/rshell ls[Kbin/rshell cat exisitingfilels[Kcat exisitingfile
+some stuff
+in here
+already
+bin
+exisitingfile
+filetobesorted
+LICENSE
+Makefile
+README.md
+sample
+src
+tests
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ cat exisitingfilef3[K21[4Plsbin/rshell 
+cat <<    f1 < f2 <f3   f3 < LICENSE < Makefile  
+FLAGS=-Wall -Werror -ansi -pedantic
+STD= --std=c++11
+
+all: rshell ls
+
+rshell:
+	if [ ! -d bin ]; then mkdir bin; fi
+	g++ -g $(STD) $(FLAGS) src/rshell.cpp -o bin/rshell
+ls:
+	if [ ! -d bin ]; then mkdir bin; fi
+	g++ -g $(STD) $(FLAGS) src/ls.cpp -o bin/ls
+pipe:
+	if [ ! -d bin ]; then mkdir bin; fi
+	g++ -g $(STD) $(FLAGS) src/pipe.cpp -o bin/pipe
+
+clean:
+	rm -rf bin
+]0;stavan@stavan-X205TA: ~/Documents/rshellstavan@stavan-X205TA:~/Documents/rshell$ exit
+exit
+
+Script done on Sun 17 May 2015 11:08:43 PM PDT
