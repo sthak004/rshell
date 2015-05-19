@@ -89,16 +89,22 @@ void inputRedirection(char* command, vector<char*> files, char **argv){
 
     /*open up all the files in the vector of files */
     for(unsigned int i = 0; i < files.size(); i++){
-        int fd0 = open(files.at(i), O_RDONLY);
-        if(fd0 == -1){
+        int fd0;
+        if( (fd0 = open(files.at(i), O_RDONLY)) == -1){
             perror(files.at(i));
             exit(1);
         }
         /* duplicate the file descriptor */
-        dup2(fd0, STDIN_FILENO);
+        if(dup2(fd0, STDIN_FILENO) < 0){
+            perror("dup2");
+            exit(1);
+        }
 
         /* close the file descriptor */
-        close(fd0);
+        if(close(fd0) < 0){
+            perror("close");
+            exit(1);
+        }
     }
 
 
@@ -138,17 +144,23 @@ void outputRedirection(char* command, vector<char*> files, char** argv){
 
      /*open up all the files in the vector of files */
     for(unsigned int i = 0; i < files.size(); i++){
-        int fd1 = open(files.at(i), O_WRONLY | O_TRUNC | O_CREAT, 0644);
-        if(fd1 == -1){
-            perror(files.at(i));
+        int fd1;
+        if ((fd1 = open(files.at(i), O_WRONLY | O_TRUNC | O_CREAT, 0644)) < 0){
+            perror("open");
             exit(1);
         }
 
         /* duplicate file descriptor */
-        dup2(fd1, STDOUT_FILENO);
+        if (dup2(fd1, STDOUT_FILENO) < 0){
+            perror("dup2");
+            exit(1);
+        }
 
         /* close the file descriptor */
-        close(fd1);
+        if( (close(fd1)) < 0){
+            perror("close");
+            exit(1);
+        }
     }
 
 
@@ -236,34 +248,59 @@ void in_out_redirection(char* command, vector<char*> files,
         }
 
         for(unsigned int x = 0; x < infiles.size(); x++){
-            int in = open(infiles.at(x), O_RDONLY);
-            if(in == -1){
+            int in;
+            if( (in = open(infiles.at(x), O_RDONLY)) == -1){
                 perror("open");
                 exit(1);
             }
-            dup2(in, STDIN_FILENO);
-            close(in);
+
+            if( (dup2(in, STDIN_FILENO)) < 0){
+                perror("dup2");
+                exit(1);
+            }
+
+            if( close(in) < 0 ){
+                perror("close");
+                exit(1);
+            }
         }
         if(special == true){
             for(unsigned int z = 0; z < outfiles.size(); z++){
-                int out = open(outfiles.at(z), O_WRONLY | O_CREAT | O_APPEND, 0644);
-                if(out == -1){
+                int out;
+                if( (out = open(outfiles.at(z), O_WRONLY | O_CREAT | O_APPEND, 0644)) == -1){
                     perror("open");
                     exit(1);
                 }
-                dup2(out, STDOUT_FILENO);
-                close(out);
+
+                if( (dup2(out, STDOUT_FILENO)) < 0){
+                    perror("dup2");
+                    exit(1);
+                }
+
+                if( close(out) < 0){
+                    perror("close");
+                    exit(1);
+                }
             }
         }
         else{
             for(unsigned int z = 0; z < outfiles.size(); z++){
-                int out = open(outfiles.at(z), O_WRONLY | O_CREAT , 0644);
-                if(out == -1){
+                int out;
+                if( (out = open(outfiles.at(z), O_WRONLY | O_CREAT, 0644)) < 0){
                     perror("open");
                     exit(1);
                 }
-                dup2(out, STDOUT_FILENO);
-                close(out);
+
+                if( (dup2(out, STDOUT_FILENO)) < 0){
+                    perror("dup2");
+                    exit(1);
+                }
+
+
+                if( close(out) < 0){
+                    perror("close");
+                    exit(1);
+                }
             }
         }
     }
@@ -466,8 +503,8 @@ void logic(vector<char*> &connectors, vector<char*> &words, char **argv){
 //------------------------------------------------------------------------------------------------
 
 void displayPrompt(){
-    char *user = getlogin(); //I assign the login name to a user pointer
-    if(user == NULL){
+    char* user;
+    if( (user = getlogin()) == NULL){
         perror("getlogin");
         exit(1);
     }
